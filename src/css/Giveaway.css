@@ -1,0 +1,13 @@
+.prize-amount{
+    font-size: 300%;
+    color:green;
+}
+.container__table {
+    height: 290px;
+    overflow-y: scroll;
+  }
+.icon{
+    text-align: right;
+    font-size: 150%;
+    color: orange;
+}

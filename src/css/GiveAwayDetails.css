@@ -1,0 +1,31 @@
+.container{
+  background: white;
+}
+.participants-seg {
+    padding-bottom: 50px;
+  }
+  .win-header{
+    text-align: center;
+    font-size: large;
+  }
+  .prize-true{
+    font-size: 150px;
+    color: #57C478;
+    padding-top: 5%;
+    padding-bottom: 5%;
+  }
+  .prize-false{
+    background-color: #FAC213;
+    font-size: 150px;
+    color: #008040;
+    padding-top: 5%;
+    padding-bottom: 5%;
+  }
+  .select-winner{
+    font-size: 200%;
+    color: teal;
+  }
+  .refund{
+    font-size: 200%;
+    color: teal;
+  }

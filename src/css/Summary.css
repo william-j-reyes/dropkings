@@ -1,0 +1,16 @@
+.summary-container{
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+.totalGiveaways{
+    font-size: 300%;
+    color:#009FD4;
+}
+.usd{
+    font-size: 300%;
+    color: #57C478;
+}
+.eth{
+    font-size: 300%;
+    color:#E9AE0B;
+}

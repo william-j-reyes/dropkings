@@ -1,0 +1,8 @@
+.container__table {
+    height: 290px;
+    overflow-y: scroll;
+  }
+.prize-cell{
+    color: #57C478;
+    font-size: 200%;
+}

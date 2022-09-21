@@ -1,0 +1,26 @@
+{
+    "0":{
+        "q":"What happens when I create a giveaway?",
+        "a":"When you create a giveaway the prize is locked into the smart contract and can only be released by having the creator select a winner or the creator cancels the giveaway"
+    },
+    "1":{
+        "q":"How are the winners randomly selected?",
+        "a":"The site uses Chainlink VRF. \"Verifiable random number generator (RNG) that enables smart contracts to access random values without compromising security or usability\""
+    },
+    "2":{
+        "q":"Why is there gratuity?",
+        "a":"Gratuity helps maintain the site, which includes providing funds to Chainlink VRF"
+    },
+    "3":{
+        "q":"Do I need to pay to enter giveaways?",
+        "a":"No, all giveaways are free to enter. You are required to pay gas fees to complete your entry."
+    },
+    "4":{
+        "q":"How do I receive my winnings?",
+        "a": "All winnings are automatically transfered to the wallet address you entered with. You can view your winnings in the profile page."
+    },
+    "5":{
+        "q":"What blockchain networks do you support?",
+        "a": "Currently, the site only supports the Ethereum Network. More networks are planned to be included."
+    }
+}
