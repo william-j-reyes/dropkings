@@ -26,8 +26,9 @@ function App() {
       <BrowserRouter basename='/'>
         <Routes>
           <Route path="/" element={<Home/>} />
-          <Route path="/Create/" element={<Create/>} />
+          <Route path="/Create" element={<Create/>} />
           <Route path="/Create/Crypto" element={<CreateCryptoDrop/>} />
+          <Route path="/Crypto" element={<CreateCryptoDrop/>} />
           <Route path="/About" element={<About/>} />
           <Route path="/Giveaways" element={<Giveaways/>} />
           <Route path="/Giveaways/id=:id" element={<GiveAwayDetails/>} />
