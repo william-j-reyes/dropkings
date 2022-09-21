@@ -11,7 +11,7 @@ export default function Create() {
                 <Container style={{margin:'auto', width:'50%', paddingTop:'5%'}}>
                     <Card.Group itemsPerRow={2} stackable>
                         <Card raised
-                            href='/Create/Crypto'
+                            href='/'
                             image={<Image src={nft}/>}
                             header="Create NFT Drop"
                         />

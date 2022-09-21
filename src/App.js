@@ -1,6 +1,6 @@
 import React from 'react';
 import Create from "./routes/Create";
-import CreateDrop from "./routes/CreateCryptoDrop";
+import CreateCryptoDrop from "./routes/CreateCryptoDrop";
 import GiveAwayDetails from "./routes/GiveAwayDetails";
 import Home from './routes/Home';
 import About from "./routes/About";
@@ -25,9 +25,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter basename='/'>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/Create/" element={<Create />} />
-          <Route path="/Create/:type" element={<CreateDrop/>} />
+          <Route path="/" element={<Home/>} />
+          <Route path="/Create/" element={<Create/>} />
+          <Route path="/Create/Crypto" element={<CreateCryptoDrop/>} />
           <Route path="/About" element={<About/>} />
           <Route path="/Giveaways" element={<Giveaways/>} />
           <Route path="/Giveaways/id=:id" element={<GiveAwayDetails/>} />
