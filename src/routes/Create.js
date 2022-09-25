@@ -11,7 +11,7 @@ export default function Create() {
             <Container className="Main_container" style={{height:'100vh', overflowY:'auto'}}>
                 <Container style={{margin:'auto', width:'50%', paddingTop:'5%'}}>
                     <Card.Group itemsPerRow={2} stackable>
-                        <Link to='/Crypto'>
+                        <Link to='/Nft'>
                             <Card raised
                                 image={<Image src={nft}/>}
                                 header="NFT Drop"

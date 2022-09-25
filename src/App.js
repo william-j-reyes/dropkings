@@ -1,6 +1,7 @@
 import React from 'react';
 import Create from "./routes/Create";
 import CreateCryptoDrop from "./routes/CreateCryptoDrop";
+import CreateNFTDrop from "./routes/CreateNFTDrop";
 import GiveAwayDetails from "./routes/GiveAwayDetails";
 import Home from './routes/Home';
 import About from "./routes/About";
@@ -27,8 +28,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/Create" element={<Create/>} />
-          <Route path="/Create/Crypto" element={<CreateCryptoDrop/>} />
-          <Route path="/Crypto" element={<CreateCryptoDrop/>} />
+          <Route path="/Crypto" element={<CreateCryptoDrop/>}/>
+          <Route path="/Nft" element={<CreateNFTDrop/>} />
           <Route path="/About" element={<About/>} />
           <Route path="/Giveaways" element={<Giveaways/>} />
           <Route path="/Giveaways/id=:id" element={<GiveAwayDetails/>} />

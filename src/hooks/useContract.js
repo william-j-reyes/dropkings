@@ -9,17 +9,22 @@ const useContract = (address, abi, ws=false, signer=false) => {
 
     const contract = useMemo(() => {
         let provider;
-        if(signer){
-            provider =  new ethers.providers.getDefaultProvider(https);
-            const signature = provider.getSigner(signer);
-            return new ethers.Contract(address, abi, signature)
-        }
-        else if(ws)
-            provider =  new ethers.providers.getDefaultProvider(wss);
-        else
-            provider =  new ethers.providers.getDefaultProvider(https);
+        try{
+            if(signer){
+                provider =  new ethers.providers.getDefaultProvider(https);
+                const signature = provider.getSigner(signer);
+                return new ethers.Contract(address, abi, signature)
+            }
+            else if(ws)
+                provider =  new ethers.providers.getDefaultProvider(wss);
+            else
+                provider =  new ethers.providers.getDefaultProvider(https);
 
-        return new ethers.Contract(address, abi, provider)
+            return new ethers.Contract(address, abi, provider);
+        }catch{
+            return null;
+        }
+        
     }, [address, abi, signer, ws, wss, https]);
     return contract
 };

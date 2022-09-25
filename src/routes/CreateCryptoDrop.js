@@ -17,7 +17,7 @@ export default function CreateCryptoDrop() {
     const balance = useSelector((state) => state.wallet.balance);
     const currency = useSelector((state) => state.wallet.network.currency); 
     const address = useSelector((state) => state.wallet.address);
-    const isConnected = useSelector((state) => state.wallet.isConnected); 
+    const isConnected = useSelector((state) => state.wallet.isConnected);
     const factoryAddress = useSelector((state) => state.wallet.network.factoryAddress);
     const factory = useContract(factoryAddress, GiveawayFactory_ABI, false, address);
 
