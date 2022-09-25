@@ -1,8 +1,11 @@
+import '../css/WalletNFTs.css'
 import React, { useEffect, useState } from 'react';
 import { useWalletNFTs } from '../hooks/useWalletNFTs';
-import { Segment, Card, Pagination } from 'semantic-ui-react'
+import { Segment, Card, Pagination } from 'semantic-ui-react';
+import { cleanIPFS } from '../helpers/cleanIPFS';
+const blank = require("../assets/white-image.png")
 
-export default function WalletNFTs({address, chain, setNFTAddress, setTokenId}) {
+export default function WalletNFTs({address, chain, setNft}) {
   const nftsPerPage = 5;
   const wallet = useWalletNFTs(address, chain);
   const [numPages, setNumPages] = useState(1);
@@ -16,10 +19,7 @@ export default function WalletNFTs({address, chain, setNFTAddress, setTokenId}) 
 
   const onClickHandler = (e, props) =>{
     const nft = props.nft;
-    const tokenAddress = nft.tokenAddress;
-    const tokenId = nft.tokenId;
-    setNFTAddress(tokenAddress);
-    setTokenId(tokenId);
+    setNft(nft);
   }
 
   const DisplayNFTs = ({pageNumber}) =>{
@@ -35,9 +35,9 @@ export default function WalletNFTs({address, chain, setNFTAddress, setTokenId}) 
       }
       const nfts = wallet.nfts.slice(first, last);
       const Items = nfts.map((nft, key)=>{
-        const image = nft.metadata.image.replace("ipfs://", "https://ipfs.moralis.io:2053/ipfs/");
+        const image = cleanIPFS(nft.metadata.image);
         return( 
-          <Card key={key} nft={nft} raised image={image} onClick={onClickHandler}/>
+          <Card key={key} nft={nft} raised image={<img alt={blank} id="card" src={image} height={"100%"} width={'100%'}/>} onClick={onClickHandler}/>
         )
       })
       return(<Card.Group itemsPerRow={5}>{Items}</Card.Group>)
@@ -50,14 +50,17 @@ export default function WalletNFTs({address, chain, setNFTAddress, setTokenId}) 
   }
 
   return(
-    <Segment>
-      <Pagination 
-        secondary 
-        pointing 
-        defaultActivePage={1} 
-        totalPages={numPages} 
-        onPageChange={pageHandler}/>
-      <DisplayNFTs pageNumber={page}/>
-    </Segment>
+    <div>
+      <Segment>
+        <Pagination 
+          secondary 
+          pointing 
+          defaultActivePage={1} 
+          totalPages={numPages} 
+          onPageChange={pageHandler}/>
+        <DisplayNFTs pageNumber={page}/>
+      </Segment>
+
+    </div>
   );
 }

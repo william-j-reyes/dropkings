@@ -6,6 +6,7 @@
         "https":"https://eth-goerli.g.alchemy.com/v2/R-IgnklRuJvVIw3ybZzXj_-oCkTBSf8f",
         "wss":"wss://eth-goerli.g.alchemy.com/v2/R-IgnklRuJvVIw3ybZzXj_-oCkTBSf8f",
         "factoryAddress":"0xDa60eCE6d9279fc88FE549f48D85fD48601D727E",
+        "nftFactoryAddress":"",
         "decimal":"3"
     },
     "0x1":{
@@ -15,6 +16,7 @@
       "https":"",
       "wss":"wss://eth-mainnet.g.alchemy.com/v2/Y3WADjP--JzGnTfK-cAhGeROVKSmRX1R",
       "factoryAddress":"",
+      "nftFactoryAddress":"",
       "decimal":"3"
 
     },
@@ -25,6 +27,7 @@
         "https":"https://eth-goerli.g.alchemy.com/v2/R-IgnklRuJvVIw3ybZzXj_-oCkTBSf8f",
         "wss":"wss://eth-goerli.g.alchemy.com/v2/R-IgnklRuJvVIw3ybZzXj_-oCkTBSf8f",
         "factoryAddress":"0xDa60eCE6d9279fc88FE549f48D85fD48601D727E",
+        "nftFactoryAddress":"",
         "decimal":"3"
 
     },
@@ -35,6 +38,7 @@
         "https":"",
         "wss":"wss://polygon-mainnet.g.alchemy.com/v2/EPzsedxaWCeJtNqKUOMJNRUzXojsIwQC",
         "factoryAddress":"",
+        "nftFactoryAddress":"",
         "decimal":"3"
 
     },
@@ -46,6 +50,7 @@
       "https":"https://polygon-mumbai.g.alchemy.com/v2/da_m7-yiSdzZ5Q_YF-n57BNyqnNWegxA",
       "wss":"wss://polygon-mumbai.g.alchemy.com/v2/da_m7-yiSdzZ5Q_YF-n57BNyqnNWegxA",
       "factoryAddress":"0xfc15eE97B2f8Ef6075e741768b86258c798B1F85",
+      "nftFactoryAddress":"",
       "decimal":"3"
 
     },
@@ -54,6 +59,7 @@
         "currency":"ETH",
         "wss":"ws://127.0.0.1:7545",
         "factoryAddress":"",
+        "nftFactoryAddress":"",
         "decimal":"3"
     }
 

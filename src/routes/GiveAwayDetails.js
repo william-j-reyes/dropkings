@@ -13,8 +13,6 @@ import {useContract} from '../hooks/useContract';
 import { cleanFloat } from '../helpers/cleanFloat';
 import { useTheme } from '@mui/material/styles';
 
-
-
 export default function GiveAwayDetails() {
   const theme = useTheme();
   const params = useParams();

@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import Layout from '../components/Layout'
 import WalletNFTs from '../components/WalletNFTs'
 
-import { Container, Segment, Grid, Form, Popup, Input, Button, Checkbox, Message } from 'semantic-ui-react'
+import { Container, Segment, Grid, Form, Popup, Input, Button, Checkbox, Message, Card } from 'semantic-ui-react'
 import { useTip } from '../hooks/useTip';
 import { useTheme } from '@mui/material/styles';
 import { cleanFloat } from '../helpers/cleanFloat';
+import { cleanIPFS } from '../helpers/cleanIPFS';
 import { useSelector } from 'react-redux';
 import { useContract } from '../hooks/useContract';
 
@@ -14,10 +15,10 @@ export default function CreateNFTDrop() {
     const theme = useTheme();
     const isConnected = useSelector((state) => state.wallet.isConnected);
     const address = useSelector((state) => state.wallet.address);
-    const balance = useSelector((state) => state.wallet.balance);
     const rate = useSelector((state) => state.wallet.toUSD);
     const currency = useSelector((state) => state.wallet.network.currency);
     const chainId = useSelector((state) => state.wallet.network.chainIdHex);
+    const nftFactoryAddress = useSelector((state) => state.wallet.network.nftFactoryAddress);
     
     const [txMessage, setTxMessage] = useState('');
     const [show, setShow] = useState(false);
@@ -25,24 +26,31 @@ export default function CreateNFTDrop() {
     const [txSuccess, setTxSuccess] = useState(false);
     const [tos, setTos] = useState(false);
 
-    const [nftAddress, setNFTAddress] = useState('');
-    const [tokenId, setTokenId] = useState(0);
+    const [nft, setNft] = useState({tokenAddress:'', tokenId:''});
+    const nftContract = useContract(nft.tokenAddress, '');
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [endDate, setEndDate] = useState(null);
     const defaultTip = useTip(2);
     const [tip, setTip] = useState(defaultTip);
-    const [total, setTotal] = useState(0);
-
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const submissionPasses = checkSubmission()
         if (submissionPasses){
-            // Create and Submit Transaction
             setTxPending(true)
+            // Two transactions required
+            // 1) Approve the transaction to be managed by factory
+            // 2) Send nft to the deployed contract
+            // Approve the NFT to be managed by the factory
+            const approve = await nftContract.approve(nftFactoryAddress, nft.tokenAddress);
+            if (approve){
+                console.log(description)
+            }
+            // Create and Submit Transaction
             // createGiveaway();
+            setTxSuccess(true)
         }else
             setShow(true);
     }
@@ -62,10 +70,6 @@ export default function CreateNFTDrop() {
         }
         else if(tip < defaultTip){
             setTxMessage('Minimum gratuity is $2')
-            return false
-        }
-        else if (total > balance){
-            setTxMessage(`Not enough ${currency}... Your balance ${balance} ${currency}`)
             return false
         }
         return true
@@ -105,6 +109,27 @@ export default function CreateNFTDrop() {
             return(<div></div>)
     }
 
+    const SelectedNFT = () =>{
+        const daniel = require("../assets/white-image.png")
+        if(nft.metadata){
+            const image = cleanIPFS(nft.metadata.image);
+            return(
+            <div style={{margin:"auto", width:"50%"}}>
+                <Card
+                    image={image}
+                />
+            </div>
+            )
+        }else{
+            return(
+            <div style={{margin:"auto", width:"50%"}}>
+                <Card
+                    image={daniel}
+                />
+            </div>)
+        }
+      }
+
     return (
         <Layout>
             <Container className="Main_container">
@@ -143,8 +168,8 @@ export default function CreateNFTDrop() {
                                         <label>NFT Address</label>
                                         <Form.Input
                                             type='text'
-                                            value={nftAddress}
-                                            onChange={(e) => {setNFTAddress(e.target.value)}}
+                                            value={nft.tokenAddress}
+                                            onChange={(e) => {setNft({...nft, tokenAddress: e.target.value} )} }
                                         />
                                     </Form.Field>
                                     <Form.Field>
@@ -152,8 +177,8 @@ export default function CreateNFTDrop() {
                                         <Form.Input
                                             min='0'
                                             type='number'
-                                            value={tokenId}
-                                            onChange={(e) => {setTokenId(e.target.value)}}
+                                            value={nft.tokenId}
+                                            onChange={(e) => {setNft({...nft, tokenId: e.target.value})}}
                                         />
                                     </Form.Field>
                                 </Form>
@@ -171,6 +196,10 @@ export default function CreateNFTDrop() {
                                     content={`~$${cleanFloat(tip * rate, 2)} USD`}
                                     on='focus'/>
                                 <br/>
+                                <Form.Field>
+                                    <SelectedNFT/>
+                                </Form.Field>
+                                <br/>
                                 <Checkbox checked={tos} onChange={(event) =>{setTos(!tos)}} label="I agree to the "/>
                                 <a href='https://www.termsfeed.com/live/87ed3717-a76b-41f0-b001-cc1ecbeba188'> Terms and Conditions</a>
                                 <br/>
@@ -180,7 +209,7 @@ export default function CreateNFTDrop() {
                         </Grid.Column>
                     </Grid>
                 </Segment>
-                <WalletNFTs address={address} chain={chainId} setNFTAddress={setNFTAddress} setTokenId={setTokenId}/>
+                <WalletNFTs address={address} chain={chainId} setNft={setNft} />
             </Container>
         </Layout>
     );
