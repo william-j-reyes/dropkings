@@ -8,24 +8,21 @@ export default function Create() {
     const nft = 'https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format';
     return (
         <Layout>
-            <Container className="Main_container" style={{height:'100vh', overflowY:'auto'}}>
-                <Container style={{margin:'auto', width:'50%', paddingTop:'5%'}}>
-                    <Card.Group itemsPerRow={2} stackable>
-                        <Link to='/Nft'>
+            <Container fluid className="Main_container" style={{height:'100vh', overflowY:'auto', paddingTop:'5%'}}>
+                    <Card.Group itemsPerRow={2} stackable centered doubling>
+                        <Link to='/Nft' style={{padding:'1%'}}>
                             <Card raised
                                 image={<Image src={nft}/>}
                                 header="NFT Drop"
                             />
                         </Link>
-
-                        <Link to='/Crypto'>
+                        <Link to='/Crypto' style={{padding:'1%'}}>
                             <Card raised
                                 image={<Image src={eth}/>}
                                 header="Crypto Drop"
                             />
                         </Link>
                     </Card.Group>
-                </Container>
             </Container>
         </Layout>
     );

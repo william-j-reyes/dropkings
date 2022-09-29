@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,  } from 'react';
+import { useSelector } from 'react-redux';
 
-const useWalletNFTs = (address, chain) => {
-    const [nfts, setNFTs] = useState([]);
+const useWalletNFTs = () => {
+    const address = useSelector((state) => state.wallet.address);
+    const chainId = useSelector((state) => state.wallet.network.chainIdHex);
+    const [nfts, setNfts] = useState(null);
 
     useEffect( ()=>{
-
-      const getWalletNFTs = async () => {
-        if(address && chain){
-
-          var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-          };
-
-          try{
-            // const local = "http://localhost:5001/giveaways-29ebd/us-central1/app";
-            const http = "https://us-central1-giveaways-29ebd.cloudfunctions.net/app";
-            const url = `${http}/moralis/WalletNFTs/${chain}/${address}`
-            const response = await fetch(url, requestOptions);
-            const json = await response.json();
-            setNFTs(json)
-          }catch(e){ console.log(e) }
+      const getWalletNFTs = async () =>{
+          // const baseurl = "http://localhost:5001/giveaways-29ebd/us-central1/app"
+          const baseurl = "https://us-central1-giveaways-29ebd.cloudfunctions.net/app";
+          if(address && chainId){
+            var requestOptions = {
+              method: 'GET',
+              redirect: 'follow'
+            };
+  
+            try{
+              const url = `${baseurl}/moralis/WalletNFTs/${chainId}/${address}`
+              const response = await fetch(url, requestOptions);
+              const json = await response.json();
+              setNfts(json)
+            }catch(e){ console.log(e) }
+          }
         }
-      }
-
-    getWalletNFTs();
-    }, [address, chain])
-    return nfts
+    getWalletNFTs()
+    }, [address, chainId])
+  return nfts
 };
 
 export {useWalletNFTs}

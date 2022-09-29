@@ -1,21 +1,26 @@
 import '../css/WalletNFTs.css'
-import React, { useEffect, useState } from 'react';
-import { useWalletNFTs } from '../hooks/useWalletNFTs';
+import React, { useState } from 'react';
 import { Segment, Card, Pagination } from 'semantic-ui-react';
 import { cleanIPFS } from '../helpers/cleanIPFS';
+import { useTheme } from '@mui/material/styles';
+
 const blank = require("../assets/white-image.png")
 
-export default function WalletNFTs({address, chain, setNft}) {
-  const nftsPerPage = 5;
-  const wallet = useWalletNFTs(address, chain);
-  const [numPages, setNumPages] = useState(1);
-  const [page, setPage] = useState(1);
+export default function WalletNFTs({walletNFTs, setNft}) {
 
-  useEffect(()=>{
-    if(wallet.nfts)
-      setNumPages(parseInt(wallet.nfts.length / nftsPerPage) + wallet.nfts.length % nftsPerPage)
-    
-  },[wallet])
+  const theme = useTheme();
+  let nftsPerPage = 5;
+  const isTabletOrMobile = theme.name === 'mobile';
+  const [page, setPage] = useState(1);
+  let numPages = 1
+  let nfts;
+  if(walletNFTs){
+    nfts = walletNFTs.nfts;
+    numPages = (parseInt(nfts.length / nftsPerPage) + nfts.length % nftsPerPage)
+  }
+
+  if(isTabletOrMobile)
+    nftsPerPage = 3;
 
   const onClickHandler = (e, props) =>{
     const nft = props.nft;
@@ -23,7 +28,8 @@ export default function WalletNFTs({address, chain, setNft}) {
   }
 
   const DisplayNFTs = ({pageNumber}) =>{
-    if(wallet.nfts){
+
+    if(nfts){
       let first;
       let last;
       if(pageNumber === 1){
@@ -33,14 +39,14 @@ export default function WalletNFTs({address, chain, setNft}) {
         first = (pageNumber - 1) * nftsPerPage
         last = first + nftsPerPage
       }
-      const nfts = wallet.nfts.slice(first, last);
-      const Items = nfts.map((nft, key)=>{
+      const slice = nfts.slice(first, last);
+      const Items = slice.map((nft, key)=>{
         const image = cleanIPFS(nft.metadata.image);
         return( 
-          <Card key={key} nft={nft} raised image={<img alt={blank} id="card" src={image} height={"100%"} width={'100%'}/>} onClick={onClickHandler}/>
+          <Card key={key} nft={nft} raised image={<img ui="false" wrapped="false" alt={blank} src={image} height={"100%"} width={'100%'}/>} onClick={onClickHandler}/>
         )
       })
-      return(<Card.Group itemsPerRow={5}>{Items}</Card.Group>)
+      return(<Card.Group itemsPerRow={nftsPerPage}>{Items}</Card.Group>)
     }else
     return(<div></div>)
   }
@@ -50,7 +56,6 @@ export default function WalletNFTs({address, chain, setNft}) {
   }
 
   return(
-    <div>
       <Segment>
         <Pagination 
           secondary 
@@ -60,7 +65,5 @@ export default function WalletNFTs({address, chain, setNft}) {
           onPageChange={pageHandler}/>
         <DisplayNFTs pageNumber={page}/>
       </Segment>
-
-    </div>
   );
 }

@@ -11,7 +11,7 @@ const useContract = (address, abi, ws=false, signer=false) => {
         let provider;
         try{
             if(signer){
-                provider =  new ethers.providers.getDefaultProvider(https);
+                provider =  new ethers.providers.Web3Provider(window.ethereum);
                 const signature = provider.getSigner(signer);
                 return new ethers.Contract(address, abi, signature)
             }
@@ -21,7 +21,8 @@ const useContract = (address, abi, ws=false, signer=false) => {
                 provider =  new ethers.providers.getDefaultProvider(https);
 
             return new ethers.Contract(address, abi, provider);
-        }catch{
+        }catch (e){
+            console.log(e)
             return null;
         }
         

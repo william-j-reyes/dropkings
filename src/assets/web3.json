@@ -50,7 +50,7 @@
       "https":"https://polygon-mumbai.g.alchemy.com/v2/da_m7-yiSdzZ5Q_YF-n57BNyqnNWegxA",
       "wss":"wss://polygon-mumbai.g.alchemy.com/v2/da_m7-yiSdzZ5Q_YF-n57BNyqnNWegxA",
       "factoryAddress":"0xfc15eE97B2f8Ef6075e741768b86258c798B1F85",
-      "nftFactoryAddress":"",
+      "nftFactoryAddress":"0x970De01365EFE19362fFda0c494d15776b081935",
       "decimal":"3"
 
     },

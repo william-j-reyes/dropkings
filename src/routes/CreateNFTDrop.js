@@ -1,14 +1,17 @@
 import React, {useState} from 'react';
 import Layout from '../components/Layout'
 import WalletNFTs from '../components/WalletNFTs'
-
-import { Container, Segment, Grid, Form, Popup, Input, Button, Checkbox, Message, Card } from 'semantic-ui-react'
+import { Container, Segment, Grid, Form, Popup, Input, Button, Checkbox, Message, Card, Step, Icon } from 'semantic-ui-react'
 import { useTip } from '../hooks/useTip';
 import { useTheme } from '@mui/material/styles';
 import { cleanFloat } from '../helpers/cleanFloat';
 import { cleanIPFS } from '../helpers/cleanIPFS';
 import { useSelector } from 'react-redux';
 import { useContract } from '../hooks/useContract';
+import { useAbi } from '../hooks/useAbi';
+import { useWalletNFTs } from '../hooks/useWalletNFTs';
+import NFTDropFactory_ABI from "../ABI/NFTDropFactory_ABI";
+import { ethers } from 'ethers';
 
 
 export default function CreateNFTDrop() {
@@ -21,36 +24,52 @@ export default function CreateNFTDrop() {
     const nftFactoryAddress = useSelector((state) => state.wallet.network.nftFactoryAddress);
     
     const [txMessage, setTxMessage] = useState('');
+    const [dropCreated, setDropCreated] = useState('active');
+    const [transfer, setTransfer] = useState('');
+
     const [show, setShow] = useState(false);
     const [txPending, setTxPending] = useState(false);
     const [txSuccess, setTxSuccess] = useState(false);
     const [tos, setTos] = useState(false);
 
+    const walletNFTs = useWalletNFTs();
     const [nft, setNft] = useState({tokenAddress:'', tokenId:''});
-    const nftContract = useContract(nft.tokenAddress, '');
+    const abi = useAbi(nft.tokenAddress, chainId);
+    const ERC721 = useContract(nft.tokenAddress, abi, false, address);
+    const dropFactory = useContract(nftFactoryAddress, NFTDropFactory_ABI, false, address);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [endDate, setEndDate] = useState(null);
-    const defaultTip = useTip(2);
+    const defaultTip = useTip(0.01);
     const [tip, setTip] = useState(defaultTip);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const submissionPasses = checkSubmission()
+        const submissionPasses = checkSubmission();
         if (submissionPasses){
-            setTxPending(true)
+            setTxPending(true);
             // Two transactions required
-            // 1) Approve the transaction to be managed by factory
-            // 2) Send nft to the deployed contract
-            // Approve the NFT to be managed by the factory
-            const approve = await nftContract.approve(nftFactoryAddress, nft.tokenAddress);
-            if (approve){
-                console.log(description)
+            const provider = dropFactory.signer.provider
+            // 1) Create the Drop
+            console.log(ERC721)
+            const date = new Date(endDate)
+            const unixTimestamp = Math.floor(date.getTime() / 1000);
+            const big_tip = ethers.utils.parseUnits(tip.toString(), "ether")
+            const createReceipt = await dropFactory.createDrop(nft.tokenAddress, parseInt(nft.tokenId), title,  unixTimestamp, description, {value: big_tip});
+            const created = await provider.waitForTransaction(createReceipt.hash)
+            if(created){
+                setDropCreated('completed')
+            // 2) Send nft to the deployed Drop
+                // const transferReceipt = await ERC721.callStatic.transferFrom(address, nftFactoryAddress, nft.tokenId);
+                const transferReceipt = await ERC721.transferFrom(address, nftFactoryAddress, nft.tokenId);
+                const transfered = await provider.waitForTransaction(transferReceipt.hash);
+                if (transfered){
+                    setTransfer('completed')
+                    setTxPending(false)
+                    setTxSuccess(true)
+                }
             }
-            // Create and Submit Transaction
-            // createGiveaway();
-            setTxSuccess(true)
         }else
             setShow(true);
     }
@@ -72,16 +91,24 @@ export default function CreateNFTDrop() {
             setTxMessage('Minimum gratuity is $2')
             return false
         }
+        else if(!ethers.utils.isAddress(nft.tokenAddress)){
+            setTxMessage('Not a valid NFT Address')
+            return false
+        }
+        else if(!nft.tokenAddress && !nft.tokenId){
+            setTxMessage('NFT not selected')
+            return false
+        }
         return true
     }
 
     const LoadingButton = () =>{
-        if(!txSuccess)
-            return(<Button fluid positive type='submit' onClick={handleSubmit}>Create</Button>)
-        else if(txPending)
-            return(<Button fluid positive type='submit' loading>Create</Button>)
+        if(txPending)
+            return(<Button loading fluid inverted color='green' type='submit'/>)
+        else if (txSuccess)
+            return(<Button fluid inverted color='green' type='submit'>{'DONE'}</Button>)
         else
-            return(<Button fluid positive type='submit' onClick={handleSubmit}>Create</Button>)
+            return(<Button fluid inverted color='green' type='submit' onClick={handleSubmit}>{'Create'}</Button>)
     }
 
     const ErrorMessage = () => {
@@ -128,7 +155,27 @@ export default function CreateNFTDrop() {
                 />
             </div>)
         }
-      }
+    }
+
+    const Steps = () =>{
+        return(
+        <Step.Group fluid>
+            <Step className={dropCreated}>
+            <Icon name='box' />
+            <Step.Content>
+                <Step.Title>Create Drop</Step.Title>
+            </Step.Content>
+            </Step>
+        
+            <Step className={transfer}>
+            <Icon name='send' color='black'/>
+            <Step.Content>
+                <Step.Title>Transfer NFT</Step.Title>
+            </Step.Content>
+            </Step>
+        </Step.Group>
+    )
+    }
 
     return (
         <Layout>
@@ -136,6 +183,7 @@ export default function CreateNFTDrop() {
                 <ErrorMessage/>
                 <h1 style={{color: theme.palette.primary.main}}>Create An NFT Drop</h1>
                 <Segment className="Main_content">
+                    <Steps/>
                     <Grid>
                         <Grid.Column width={8}>
                             <Form>
@@ -160,6 +208,14 @@ export default function CreateNFTDrop() {
                                         onChange={(e) =>{ setDescription(e.target.value) }}
                                     />
                             </Form>
+                            <Message>
+                                <Message.Header>How It Works</Message.Header>
+                                <p>Creating an NFT Drop requires the following 2 transactions to be signed:</p>
+                                <Message.List as='ol'>
+                                    <Message.Item>The creation of the Drop</Message.Item>
+                                    <Message.Item>The transfer of the NFT to the Drop</Message.Item>
+                                </Message.List>
+                            </Message>
                         </Grid.Column>
                         <Grid.Column width={8}>
                             <div className='payment-col'>
@@ -209,7 +265,7 @@ export default function CreateNFTDrop() {
                         </Grid.Column>
                     </Grid>
                 </Segment>
-                <WalletNFTs address={address} chain={chainId} setNft={setNft} />
+                <WalletNFTs walletNFTs={walletNFTs} setNft={setNft}/>
             </Container>
         </Layout>
     );
