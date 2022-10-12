@@ -3,6 +3,7 @@ import Create from "./routes/Create";
 import CreateCryptoDrop from "./routes/CreateCryptoDrop";
 import CreateNFTDrop from "./routes/CreateNFTDrop";
 import GiveAwayDetails from "./routes/GiveAwayDetails";
+import NFTDropDetails from "./routes/NFTDropDetails";
 import Home from './routes/Home';
 import About from "./routes/About";
 import Giveaways from "./routes/Giveaways";
@@ -33,6 +34,7 @@ function App() {
           <Route path="/About" element={<About/>} />
           <Route path="/Giveaways" element={<Giveaways/>} />
           <Route path="/Giveaways/id=:id" element={<GiveAwayDetails/>} />
+          <Route path="/NftDrop/id=:id" element={<NFTDropDetails/>} />
           <Route path="/Profile" element={<Profile/>} />
           <Route path="/Profile/id=:id" element={<Profile/>} />
         </Routes>

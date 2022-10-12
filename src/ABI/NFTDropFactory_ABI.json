@@ -1,63 +1,5 @@
 [
 	{
-		"inputs": [
-			{
-				"internalType": "uint64",
-				"name": "sid",
-				"type": "uint64"
-			},
-			{
-				"internalType": "address",
-				"name": "receivingWallet",
-				"type": "address"
-			}
-		],
-		"name": "cancelSubscription",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_erc721",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_title",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_expiry",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
-			}
-		],
-		"name": "createDrop",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "createNewSubscription",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -95,12 +37,6 @@
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
-				"name": "title",
-				"type": "string"
-			},
-			{
-				"indexed": false,
 				"internalType": "uint256",
 				"name": "expiry",
 				"type": "uint256"
@@ -122,19 +58,74 @@
 		"type": "event"
 	},
 	{
+		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "contractAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
 				"internalType": "uint256",
-				"name": "requestId",
+				"name": "entryTime",
+				"type": "uint256"
+			}
+		],
+		"name": "NewParticipant",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint64",
+				"name": "sid",
+				"type": "uint64"
+			},
+			{
+				"internalType": "address",
+				"name": "receivingWallet",
+				"type": "address"
+			}
+		],
+		"name": "cancelSubscription",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_erc721",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint256[]",
-				"name": "randomWords",
-				"type": "uint256[]"
+				"internalType": "uint256",
+				"name": "_expiry",
+				"type": "uint256"
 			}
 		],
-		"name": "rawFulfillRandomWords",
+		"name": "createDrop",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "createNewSubscription",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -156,6 +147,19 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "dropAddress",
+				"type": "address"
+			}
+		],
+		"name": "enterDrop",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -182,6 +186,24 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "randomWords",
+				"type": "uint256[]"
+			}
+		],
+		"name": "rawFulfillRandomWords",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -243,6 +265,19 @@
 				"internalType": "uint64",
 				"name": "",
 				"type": "uint64"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalGiveaways",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "totalGiveAways_",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

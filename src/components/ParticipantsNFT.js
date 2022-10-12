@@ -2,27 +2,26 @@ import React, {useEffect, useState} from 'react';
 import { Table, Icon } from 'semantic-ui-react'
 import { ethers } from 'ethers';
 import '../css/Participants.css'
-import GiveawayFactory_ABI from "../ABI/GiveawayFactory_ABI";
+import NFTDropFactory_ABI from "../ABI/NFTDropFactory_ABI";
 import { useContract } from '..//hooks/useContract';
 import { useSelector } from 'react-redux';
 
-export default function Participants({contractAddress}) {
-    const factoryAddress = useSelector((state) => state.wallet.network.factoryAddress);
-    const contractWS = useContract(factoryAddress, GiveawayFactory_ABI, true)
-    const [participants, setParticipants] = useState([])
+export default function ParticipantsNFT({contractAddress}) {
+    const factoryAddress = useSelector((state) => state.wallet.network.nftFactoryAddress);
+    const contractWS = useContract(factoryAddress, NFTDropFactory_ABI, true);
+    const [participants, setParticipants] = useState([]);
     
     // New Participants
     useEffect( () => {
-      contractWS.on("NewParticipant", (_owner, _contractAddress, _title, _entryTime, _prizePool) => {
-        console.log("New Participant!!")
-        const tmp = {_owner, _contractAddress, _title, _entryTime, _prizePool}
+      contractWS.on("NewParticipant", (owner, contractAddress, entryTime) => {
+        const tmp = {owner, contractAddress, entryTime}
         setParticipants( participants => [tmp, ...participants]);
       })
       // Cleanup
       return () =>{
         contractWS.removeListener("NewParticipant");
       }
-    }, [contractWS])
+    }, [contractWS]);
 
     // Get All Current Participants Events
     useEffect( () => {
@@ -31,8 +30,9 @@ export default function Participants({contractAddress}) {
           const eventFilter = contractWS.filters.NewParticipant(null, contractAddress)
           const response = await contractWS.queryFilter(eventFilter)
           const events = response.map( (item) =>{
-            return item.args
+            return {contractAddress: item.args.contractAddress, entryTime: item.args.entryTime, owner: item.args.owner}
           })
+          console.log(events)
           setParticipants(events.slice().reverse())
         }catch(e){
           console.log(e)
@@ -42,21 +42,18 @@ export default function Participants({contractAddress}) {
       return () =>{
         setParticipants([]);
       }
-  }, [contractWS, contractAddress])
+  }, [contractWS, contractAddress]);
     
     const Details = () =>{
         if(participants){
-            // const tmp =[...Array(50).keys()]
             const Items = participants.map( (item, key) => {
-                const unix = ethers.utils.formatUnits(item._entryTime, 0)
-                // const entries = item.entries;
+                const unix = ethers.utils.formatUnits(item.entryTime, 0)
                 const date = new Date(unix * 1000)
                 const date_str = date.toLocaleString()
                 return(
                     <Table.Row key={key}>
-                        <Table.Cell>{item._owner}</Table.Cell>
+                        <Table.Cell>{item.owner}</Table.Cell>
                         <Table.Cell>{date_str}</Table.Cell>
-                        {/* <Table.Cell>{entries}</Table.Cell> */}
                     </Table.Row>
                 )
             })
@@ -72,7 +69,6 @@ export default function Participants({contractAddress}) {
                 <Table.Row>
                     <Table.HeaderCell>Participant Address</Table.HeaderCell>
                     <Table.HeaderCell>Entry Date</Table.HeaderCell>
-                    {/* <Table.HeaderCell># of Entries</Table.HeaderCell> */}
                 </Table.Row>
               </Table.Header>
               <Details/>

@@ -22,7 +22,6 @@ const useContract = (address, abi, ws=false, signer=false) => {
 
             return new ethers.Contract(address, abi, provider);
         }catch (e){
-            console.log(e)
             return null;
         }
         

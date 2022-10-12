@@ -38,8 +38,6 @@ export default function CreateNFTDrop() {
     const ERC721 = useContract(nft.tokenAddress, abi, false, address);
     const dropFactory = useContract(nftFactoryAddress, NFTDropFactory_ABI, false, address);
 
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
     const [endDate, setEndDate] = useState(null);
     const defaultTip = useTip(0.01);
     const [tip, setTip] = useState(defaultTip);
@@ -55,19 +53,23 @@ export default function CreateNFTDrop() {
             console.log(ERC721)
             const date = new Date(endDate)
             const unixTimestamp = Math.floor(date.getTime() / 1000);
-            const big_tip = ethers.utils.parseUnits(tip.toString(), "ether")
-            const createReceipt = await dropFactory.createDrop(nft.tokenAddress, parseInt(nft.tokenId), title,  unixTimestamp, description, {value: big_tip});
-            const created = await provider.waitForTransaction(createReceipt.hash)
-            if(created){
+            const big_tip = ethers.utils.parseUnits(tip.toString(), "ether");
+            const createReceipt = await dropFactory.createDrop(nft.tokenAddress, parseInt(nft.tokenId), unixTimestamp, {value: big_tip});
+            const created = await provider.waitForTransaction(createReceipt.hash);
+            // Listen for NFTDropCreation Event
+            const eventFilter = dropFactory.filters.NewNFTDrop(address);
+            const response = await dropFactory.queryFilter(eventFilter);
+            const event = response.pop();
+            if(created.blockHash === event.blockHash){
                 setDropCreated('completed')
             // 2) Send nft to the deployed Drop
-                // const transferReceipt = await ERC721.callStatic.transferFrom(address, nftFactoryAddress, nft.tokenId);
-                const transferReceipt = await ERC721.transferFrom(address, nftFactoryAddress, nft.tokenId);
-                const transfered = await provider.waitForTransaction(transferReceipt.hash);
-                if (transfered){
-                    setTransfer('completed')
-                    setTxPending(false)
-                    setTxSuccess(true)
+                const approveReceipt = await ERC721.approve(event.args.contractAddress, nft.tokenId);
+                const approved = await provider.waitForTransaction(approveReceipt.hash);
+                if (approved){
+                    setTransfer('completed');
+                    setTxPending(false);
+                    setTxMessage("NFT Drop Successfully Created");
+                    setTxSuccess(true);
                 }
             }
         }else
@@ -104,19 +106,19 @@ export default function CreateNFTDrop() {
 
     const LoadingButton = () =>{
         if(txPending)
-            return(<Button loading fluid inverted color='green' type='submit'/>)
+            return(<Button loading fluid inverted color='green' type='submit'/>);
         else if (txSuccess)
-            return(<Button fluid inverted color='green' type='submit'>{'DONE'}</Button>)
+            return(<Button fluid inverted color='green' type='submit'>{'DONE'}</Button>);
         else
-            return(<Button fluid inverted color='green' type='submit' onClick={handleSubmit}>{'Create'}</Button>)
+            return(<Button fluid inverted color='green' type='submit' onClick={handleSubmit}>{'Create'}</Button>);
     }
 
     const ErrorMessage = () => {
-        let color = 'red'
+        let color = 'red';
         if(txSuccess)
-            color = 'green'
+            color = 'green';
         else if (txPending)
-            color = 'yellow'
+            color = 'yellow';
 
         if(show)
             return(
@@ -170,7 +172,7 @@ export default function CreateNFTDrop() {
             <Step className={transfer}>
             <Icon name='send' color='black'/>
             <Step.Content>
-                <Step.Title>Transfer NFT</Step.Title>
+                <Step.Title>Approve Drop Transfer</Step.Title>
             </Step.Content>
             </Step>
         </Step.Group>
@@ -188,47 +190,14 @@ export default function CreateNFTDrop() {
                         <Grid.Column width={8}>
                             <Form>
                                 <Form.Field>
-                                    <label>Title</label>
-                                    <Form.Input
-                                        maxLength="25"
-                                        type='text'
-                                        value={title}
-                                        placeholder='Drop Name (25 Char Limit)' 
-                                        onChange={(e) => {setTitle(e.target.value)}}
-                                    />
-                                </Form.Field>
-                                <Form.Field>
-                                    <label>End Date</label>
-                                    <Form.Input type='datetime-local' placeholder='' onChange={(e)=>{setEndDate(e.target.value)}}/>
-                                </Form.Field>
-                                    <Form.TextArea 
-                                        maxLength="280" 
-                                        label='Description' 
-                                        placeholder='Tell us about the giveaway (100 Char Limit)'
-                                        onChange={(e) =>{ setDescription(e.target.value) }}
-                                    />
-                            </Form>
-                            <Message>
-                                <Message.Header>How It Works</Message.Header>
-                                <p>Creating an NFT Drop requires the following 2 transactions to be signed:</p>
-                                <Message.List as='ol'>
-                                    <Message.Item>The creation of the Drop</Message.Item>
-                                    <Message.Item>The transfer of the NFT to the Drop</Message.Item>
-                                </Message.List>
-                            </Message>
-                        </Grid.Column>
-                        <Grid.Column width={8}>
-                            <div className='payment-col'>
-                                <Form>
-                                    <Form.Field>
                                         <label>NFT Address</label>
                                         <Form.Input
                                             type='text'
                                             value={nft.tokenAddress}
                                             onChange={(e) => {setNft({...nft, tokenAddress: e.target.value} )} }
                                         />
-                                    </Form.Field>
-                                    <Form.Field>
+                                </Form.Field>
+                                <Form.Field>
                                         <label>Token Id</label>
                                         <Form.Input
                                             min='0'
@@ -236,8 +205,23 @@ export default function CreateNFTDrop() {
                                             value={nft.tokenId}
                                             onChange={(e) => {setNft({...nft, tokenId: e.target.value})}}
                                         />
-                                    </Form.Field>
-                                </Form>
+                                </Form.Field>
+                                <Form.Field>
+                                    <label>End Date</label>
+                                    <Form.Input type='datetime-local' placeholder='' onChange={(e)=>{setEndDate(e.target.value)}}/>
+                                </Form.Field>
+                            </Form>
+                            <Message>
+                                <Message.Header>How It Works</Message.Header>
+                                <p>Creating an NFT Drop requires the following 2 transactions to be signed:</p>
+                                <Message.List as='ol'>
+                                    <Message.Item>The creation of the Drop</Message.Item>
+                                    <Message.Item>Approving the Drop to transfer the NFT on your behalf</Message.Item>
+                                </Message.List>
+                            </Message>
+                        </Grid.Column>
+                        <Grid.Column width={8}>
+                            <div className='payment-col'>
                                 <Popup
                                     trigger={<div>
                                         <label>Gratuity</label>
