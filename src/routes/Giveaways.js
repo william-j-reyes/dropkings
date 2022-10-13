@@ -140,7 +140,7 @@ export default function Giveaways() {
             <Container>
                 <div>
                     <Header as='h1' style={{color:'#1BA39C'}}>
-                        <p style={{textAlign:'center', fontSize:'200%'}}>Drop Board</p>
+                        <p style={{textAlign:'center', fontSize:'200%'}}>Crypto Drop Board</p>
                     </Header>
                 </div>
                 <div style={{textAlign:'right', paddingBottom:'4%'}}>

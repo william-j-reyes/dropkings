@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ConnectWallet from "./ConnectWallet";
-import { Menu, Icon, Header } from 'semantic-ui-react';
+import { Menu, Icon, Header, Dropdown } from 'semantic-ui-react';
 import { useTheme } from '@mui/material/styles';
 
 export default function Navigation({mobile, setVisible, visible}){
@@ -25,7 +25,7 @@ export default function Navigation({mobile, setVisible, visible}){
         )
     }else{
         return(
-            <Menu className="ui six item menu">
+            <Menu className="ui fluid six item menu">
                 <Menu.Item>
                     <Link to="/">
                     <Header as='h2' style={{color:theme.palette.primary.main, textAlign:'center' }}>
@@ -34,9 +34,16 @@ export default function Navigation({mobile, setVisible, visible}){
                     </Header>
                     </Link>
                 </Menu.Item>
-                <Menu.Item>
-                    <Link to="/Giveaways" style={{fontSize:fontsize, color:color}}>Drops</Link>
-                </Menu.Item>
+                <Dropdown item text='Drops'>
+                    <Dropdown.Menu>
+                        <Link to="/Giveaways" style={{fontSize:fontsize, color:color}}>
+                        <Dropdown.Item style={{textAlign:'center'}}>Crypto</Dropdown.Item>
+                        </Link>
+                        <Link to="/NFTDrops" style={{fontSize:fontsize, color:color}}>
+                        <Dropdown.Item style={{textAlign:'center'}}>NFT</Dropdown.Item>
+                        </Link>
+                    </Dropdown.Menu>
+                </Dropdown>
                 <Menu.Item>
                     <Link to="/About" style={{fontSize:fontsize, color:color}}>About</Link>
                 </Menu.Item>
