@@ -52,6 +52,12 @@
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "tokenURI",
+				"type": "string"
 			}
 		],
 		"name": "NewNFTDrop",
@@ -113,6 +119,11 @@
 				"type": "uint256"
 			},
 			{
+				"internalType": "string",
+				"name": "_tokenURI",
+				"type": "string"
+			},
+			{
 				"internalType": "uint256",
 				"name": "_expiry",
 				"type": "uint256"
@@ -165,6 +176,30 @@
 	{
 		"inputs": [],
 		"name": "getDeployedDrops",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "start",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "end",
+				"type": "uint256"
+			}
+		],
+		"name": "getSlicedDrops",
 		"outputs": [
 			{
 				"internalType": "address[]",

@@ -25,7 +25,10 @@ export default function CreateNFTDrop() {
     
     const [txMessage, setTxMessage] = useState('');
     const [dropCreated, setDropCreated] = useState('active');
+    const [dropIcon, setDropIcon] = useState('box');
+
     const [transfer, setTransfer] = useState('');
+    const [transferIcon, setTransferIcon] = useState('send');
 
     const [show, setShow] = useState(false);
     const [txPending, setTxPending] = useState(false);
@@ -47,6 +50,7 @@ export default function CreateNFTDrop() {
         const submissionPasses = checkSubmission();
         if (submissionPasses){
             setTxPending(true);
+            setDropIcon('circle notch loading')
             // Two transactions required
             const provider = dropFactory.signer.provider
             // 1) Create the Drop
@@ -54,7 +58,7 @@ export default function CreateNFTDrop() {
             const date = new Date(endDate)
             const unixTimestamp = Math.floor(date.getTime() / 1000);
             const big_tip = ethers.utils.parseUnits(tip.toString(), "ether");
-            const createReceipt = await dropFactory.createDrop(nft.tokenAddress, parseInt(nft.tokenId), unixTimestamp, {value: big_tip});
+            const createReceipt = await dropFactory.createDrop(nft.tokenAddress, parseInt(nft.tokenId), nft.metadata.image, unixTimestamp, {value: big_tip});
             const created = await provider.waitForTransaction(createReceipt.hash);
             // Listen for NFTDropCreation Event
             const eventFilter = dropFactory.filters.NewNFTDrop(address);
@@ -62,11 +66,14 @@ export default function CreateNFTDrop() {
             const event = response.pop();
             if(created.blockHash === event.blockHash){
                 setDropCreated('completed')
+                setDropIcon('circle notch')
+                setTransferIcon('circle notch loading')
             // 2) Send nft to the deployed Drop
                 const approveReceipt = await ERC721.approve(event.args.contractAddress, nft.tokenId);
                 const approved = await provider.waitForTransaction(approveReceipt.hash);
                 if (approved){
                     setTransfer('completed');
+                    setTransferIcon('circle notch')
                     setTxPending(false);
                     setTxMessage("NFT Drop Successfully Created");
                     setTxSuccess(true);
@@ -108,7 +115,7 @@ export default function CreateNFTDrop() {
         if(txPending)
             return(<Button loading fluid inverted color='green' type='submit'/>);
         else if (txSuccess)
-            return(<Button fluid inverted color='green' type='submit'>{'DONE'}</Button>);
+            return(<Button fluid inverted disabled color='green' type='submit'>{'Compeleted'}</Button>);
         else
             return(<Button fluid inverted color='green' type='submit' onClick={handleSubmit}>{'Create'}</Button>);
     }
@@ -163,14 +170,14 @@ export default function CreateNFTDrop() {
         return(
         <Step.Group fluid>
             <Step className={dropCreated}>
-            <Icon name='box' />
+            <Icon className={dropIcon} />
             <Step.Content>
                 <Step.Title>Create Drop</Step.Title>
             </Step.Content>
             </Step>
         
             <Step className={transfer}>
-            <Icon name='send' color='black'/>
+            <Icon className={transferIcon} color='black'/>
             <Step.Content>
                 <Step.Title>Approve Drop Transfer</Step.Title>
             </Step.Content>

@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import Layout from '../components/Layout'
-import { Container, Pagination, Header, Table } from 'semantic-ui-react'
+import { Container, Pagination, Header, Table, Image } from 'semantic-ui-react'
 import {Link} from "react-router-dom";
 import NFTDropFactory_ABI from "../ABI/NFTDropFactory_ABI";
 import { ethers } from 'ethers';
 import { useSelector } from 'react-redux';
-import { useContract } from '..//hooks/useContract';
-import { useCountdown } from '..//hooks/useCountdown';
+import { useContract } from '../hooks/useContract';
+import { cleanIPFS } from '../helpers/cleanIPFS';
+import { useCountdown } from '../hooks/useCountdown';
 import '../css/Giveaway.css';
 
 export default function NFTDrops() {
@@ -47,8 +48,8 @@ export default function NFTDrops() {
         if(start < 0)
             start = 0;
         if(start !== end)
-            // return await factory.getSlicedGifts(start, end);
-            return  ['0x98140548c935ddd7f1e859DA2d98BE58b596461e','0xaE20Ba3960563503B614acBa2b2C9361caC13d17','0xB205ce4158Cc440F63dd14b9711E2C9BB0ECdbd5','0xC31e173C74061a5ece22181dE4a4AaD28821B324','0x717Abd72E63361F2a12F5e5eb945ca6828de4D28']
+            return await factory.getSlicedDrops(start, end);
+            // return  ['0xf283a20ceEA52024F5942eD78b8f1Aa63c92Bb96']
         else
             return []
     }
@@ -74,6 +75,7 @@ export default function NFTDrops() {
         let status;
         let positive = true;
         let negative = true;
+        let image = cleanIPFS(item.tokenURI);
         if(days + hours + minutes + seconds <= 0){
             status = 'CLOSED'
             days = 0;
@@ -88,6 +90,7 @@ export default function NFTDrops() {
         }
         return(
             <Table.Row>
+                <Table.Cell><Image src={image} size='tiny'/></Table.Cell>
                 <Table.Cell>
                     <Link to={`/NftDrop/id=${item.contractAddress}`}>
                         {item.contractAddress}
@@ -110,6 +113,7 @@ export default function NFTDrops() {
                 <Table unstackable>
                     <Table.Header>
                         <Table.Row>
+                        <Table.HeaderCell>NFT</Table.HeaderCell>
                         <Table.HeaderCell>Address</Table.HeaderCell>
                         <Table.HeaderCell>Status</Table.HeaderCell>
                         <Table.HeaderCell>Time Left</Table.HeaderCell>
