@@ -5,6 +5,8 @@ import '../css/Participants.css'
 import NFTDropFactory_ABI from "../ABI/NFTDropFactory_ABI";
 import { useContract } from '..//hooks/useContract';
 import { useSelector } from 'react-redux';
+import { Link } from "react-router-dom";
+
 
 export default function ParticipantsNFT({contractAddress}) {
     const factoryAddress = useSelector((state) => state.wallet.network.nftFactoryAddress);
@@ -52,7 +54,9 @@ export default function ParticipantsNFT({contractAddress}) {
                 const date_str = date.toLocaleString()
                 return(
                     <Table.Row key={key}>
-                        <Table.Cell>{item.owner}</Table.Cell>
+                        <Table.Cell>
+                          <Link to={`/profile/id=${item.owner}`}>{item.owner}</Link>
+                        </Table.Cell>
                         <Table.Cell>{date_str}</Table.Cell>
                     </Table.Row>
                 )
