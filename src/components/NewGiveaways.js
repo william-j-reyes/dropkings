@@ -36,9 +36,9 @@ export default function NewGiveaways() {
                 while(i <= upperbound){
                     const address = await factory.deployedGiveaways(total - i)
                     const contract =  new ethers.Contract(address, Giveaway_ABI, provider)
-                    const [title, closingTime, prizePool, owner] = await Promise.all([
-                        contract.title(), contract.closingTime(), contract.prizePool(), contract.owner()])
-                    const tmp = {title, contractAddress: address, closingTime, 
+                    const [closingTime, prizePool, owner] = await Promise.all([
+                        contract.closingTime(), contract.prizePool(), contract.owner()])
+                    const tmp = {contractAddress: address, closingTime, 
                         prizePool: ethers.utils.formatUnits(prizePool, 18), owner}
                     setGiveAways( giveaways => [...giveaways, tmp]);
                     i += 1;
@@ -89,7 +89,7 @@ export default function NewGiveaways() {
                     <Table.Row key={key}>
                         <Table.Cell>
                             <Link to={`/Giveaways/id=${item.contractAddress}`} > 
-                                <p style={{fontSize:fontSize}}> {item.title} </p>
+                                <p style={{fontSize:fontSize}}> {item.contractAddress} </p>
                             </Link>
                         </Table.Cell>
                         <Table.Cell><p className='prize-cell' style={{fontSize:fontSize}}>${cleanFloat(_prize, 2)}</p></Table.Cell>
@@ -111,7 +111,7 @@ export default function NewGiveaways() {
                     <Table unstackable>
                         <Table.Header>
                             <Table.Row>
-                                <Table.HeaderCell>Title</Table.HeaderCell>
+                                <Table.HeaderCell>Adress</Table.HeaderCell>
                                 <Table.HeaderCell>Prize</Table.HeaderCell>
                                 <Table.HeaderCell>Closes @</Table.HeaderCell>
                             </Table.Row>

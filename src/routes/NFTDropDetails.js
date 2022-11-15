@@ -28,7 +28,6 @@ export default function NFTDropDetails() {
   const [hideMsg, setHide] = useState(true);
   const [image, setImage] = useState('');
   const [nft, setNft] = useState({});
-  // 0xCb75D2eDcAD7083dC510433d65F84E756Dab761A
   const contractAddress = params.id;
   const abi = useAbi(nft.nft, chainId);
   const ERC721 = useContract(nft.nft, abi, false, address);
@@ -87,16 +86,13 @@ export default function NFTDropDetails() {
     }
   }
 
-  const _refund = async () =>{
-  }
-
   const OwnerControls = () => {
     if(isConnected && address === nft.owner && nft.winner === ethers.constants.AddressZero){
       return(
         <Menu widths={3}>
           <Menu.Item onClick={_selectWinner}><p className='select-winner'>Select Winner</p></Menu.Item>
           <Menu.Item icon={<Icon name="plus"/>}/>
-          <Menu.Item onClick={_refund}><p className='refund'>Cancel</p></Menu.Item>
+          <Menu.Item ><p className='refund'>Cancel</p></Menu.Item>
         </Menu>
       )
     }

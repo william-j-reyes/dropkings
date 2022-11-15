@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Layout from '../components/Layout'
-import { Container, Form, Checkbox, Button, Grid, Message, Input, Segment, Popup } from 'semantic-ui-react'
+import { Container, Form, Checkbox, Button, Message, Input, Segment, Popup } from 'semantic-ui-react'
 import { useSelector } from 'react-redux';
 import '../css/Create.css'; 
 import GiveawayFactory_ABI from "../ABI/GiveawayFactory_ABI";
@@ -21,14 +21,12 @@ export default function CreateCryptoDrop() {
     const factoryAddress = useSelector((state) => state.wallet.network.factoryAddress);
     const factory = useContract(factoryAddress, GiveawayFactory_ABI, false, address);
 
-    const minPrize = useTip(5);
-    const defaultTip = useTip(2);
+    const minPrize = useTip(0);
+    const defaultTip = useTip(0.2);
     const [tip, setTip] = useState(defaultTip);
     const [prize, setPrize] = useState(0);
     const [total, setTotal] = useState(0);
 
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
     const [endDate, setEndDate] = useState(null);
     const [txPending, setTxPending] = useState(false);
     const [txSuccess, setTxSuccess] = useState(false);
@@ -80,7 +78,7 @@ export default function CreateCryptoDrop() {
             const value = ethers.utils.parseUnits(total.toString(), "ether")
             const _ethTip = ethers.utils.parseUnits(tip.toString(), "ether")
             setTxMessage('Waiting on Transaction Success...')
-            const tx = await factory.createGiveaway(title, unixTimestamp, _ethTip, description, {value: value});
+            const tx = await factory.createGiveaway(unixTimestamp, _ethTip, {value: value});
             // Transaction complete
             if (tx){
                 console.log("Result:", tx)
@@ -145,77 +143,58 @@ export default function CreateCryptoDrop() {
         <Layout>
             <Container className="Main_container">
                 <ErrorMessage/>
-                <h1 style={{color: theme.palette.primary.main}}>Create A Drop</h1>
-                <Segment className="Main_content">
-                    <Grid>
-                        <Grid.Column width={8}>
-                            <Form>
-                                <Form.Field>
-                                    <label>Title</label>
-                                    <Form.Input
-                                        maxLength="25"
-                                        type='text'
-                                        value={title}
-                                        placeholder='My Giveaway (25 Char Limit)' 
-                                        onChange={(e) => {setTitle(e.target.value)}}
-                                    />
-                                </Form.Field>
-                                <Form.Field>
-                                    <label>End Date</label>
-                                    <Form.Input type='datetime-local' placeholder='' onChange={(e)=>{setEndDate(e.target.value)}}/>
-                                </Form.Field>
-                                    <Form.TextArea 
-                                        maxLength="280" 
-                                        label='Description' 
-                                        placeholder='Tell us about the giveaway (100 Char Limit)'
-                                        onChange={(e) =>{ setDescription(e.target.value) }}
-                                    />
-                            </Form>
-                        </Grid.Column>
-                        <Grid.Column width={8}>
-                            <div className='payment-col'>
-                                <label>Prize Amount</label>
-                                <Popup
-                                    trigger={<Input fluid 
-                                        value={prize}
-                                        min={minPrize}
-                                        step={minPrize}
-                                        type='number' 
+                
+                <Segment className="Main_content" style={{margin:'auto', width:'50%'}}>
+                    <h1 style={{color: theme.palette.primary.main}}>Crypto Drop</h1>
+                    <Form>
+                        
+                        <Form.Field>
+                        <label>Prize Amount</label>
+                        <Popup
+                            trigger={<Input fluid 
+                                value={prize}
+                                min={minPrize}
+                                step={minPrize}
+                                type='number' 
+                                label={currency} 
+                                labelPosition='right' 
+                                placeholder={minPrize}
+                                onChange={(e)=>{setPrize(e.target.value)}}/>}
+                            content={`~$${cleanFloat(prize * rate, 2)} USD`}
+                            on='focus'
+                        />
+                        </Form.Field>
+                        <Form.Field>
+                            <label>End Date</label>
+                            <Form.Input type='datetime-local' placeholder='' onChange={(e)=>{setEndDate(e.target.value)}}/>
+                        </Form.Field>
+                        <Form.Field>
+                        <Popup
+                            trigger={<div>
+                                    <label>Gratuity</label>
+                                    <Input fluid 
+                                        value={tip}
+                                        min={defaultTip}
+                                        step="0.0001"
+                                        type='number'  
                                         label={currency} 
-                                        labelPosition='right' 
-                                        placeholder={minPrize}
-                                        onChange={(e)=>{setPrize(e.target.value)}}/>}
-                                    content={`~$${cleanFloat(prize * rate, 2)} USD`}
-                                    on='focus'
-                                />
-
-                                <Popup
-                                    trigger={<div>
-                                            <label>Gratuity</label>
-                                            <Input fluid 
-                                                value={tip}
-                                                min={defaultTip}
-                                                step="0.0001"
-                                                type='number'  
-                                                label={currency} 
-                                                labelPosition='right' onChange={(e)=>{setTip(e.target.value)}}/>
-                                            </div>}
-                                    content={`~$${cleanFloat(tip * rate, 2)} USD`}
-                                    on='focus'/>
-                                
-                                <Popup
-                                    trigger={<Segment><label>Total: {(cleanFloat(total, 5))} {currency} </label></Segment>}
-                                    content={`~$${cleanFloat(total * rate, 2)} USD + Gas Fee`}
-                                    on='hover'/>
-                                <hr/>
-                                <Checkbox checked={tos} onChange={(event) =>{setTos(!tos)}} label="I agree to the "/>
-                                <a href='https://www.termsfeed.com/live/87ed3717-a76b-41f0-b001-cc1ecbeba188'> Terms and Conditions</a>
-                                <br/>
-                                <br/>
-                                <LoadingButton/>
-                            </div>
-                        </Grid.Column>
-                    </Grid>
+                                        labelPosition='right' onChange={(e)=>{setTip(e.target.value)}}/>
+                                    </div>}
+                            content={`~$${cleanFloat(tip * rate, 2)} USD`}
+                            on='focus'/>
+                        </Form.Field>
+                        
+                        <Popup
+                            trigger={<Segment><label>Total: {(cleanFloat(total, 5))} {currency} </label></Segment>}
+                            content={`~$${cleanFloat(total * rate, 2)} USD + Gas Fee`}
+                            on='hover'/>
+                        <hr/>
+                        <Checkbox checked={tos} onChange={(event) =>{setTos(!tos)}} label="I agree to the "/>
+                        <a href='https://www.termsfeed.com/live/87ed3717-a76b-41f0-b001-cc1ecbeba188'> Terms and Conditions</a>
+                        <br/>
+                        <br/>
+                        <LoadingButton/>
+                    </Form>
                 </Segment>
             </Container>
         </Layout>

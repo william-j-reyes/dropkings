@@ -49,7 +49,7 @@
       "currency":"MATIC",
       "https":"https://polygon-mumbai.g.alchemy.com/v2/da_m7-yiSdzZ5Q_YF-n57BNyqnNWegxA",
       "wss":"wss://polygon-mumbai.g.alchemy.com/v2/da_m7-yiSdzZ5Q_YF-n57BNyqnNWegxA",
-      "factoryAddress":"0xfc15eE97B2f8Ef6075e741768b86258c798B1F85",
+      "factoryAddress":"0x4Ad450A5ba7426deE224e251F52677E3cF4211A7",
       "nftFactoryAddress":"0xf4967Fea60911D3D1B20ad36aBCa2a46666e4df1",
       "decimal":"3"
 

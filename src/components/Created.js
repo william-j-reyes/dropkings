@@ -19,10 +19,9 @@ export default function Created({ created, activeItem }) {
                     <Table.Row key={key}>
                         <Table.Cell>
                             <Link to={`/Giveaways/id=${item._contract}`}> 
-                                {item._title}
+                                {item._contract}
                             </Link>
                         </Table.Cell>
-                        <Table.Cell><p>{item._contract}</p></Table.Cell>
                         <Table.Cell><p>{date.toLocaleString()}</p></Table.Cell>
                         <Table.Cell><p>${prize}</p></Table.Cell>
                     </Table.Row>
@@ -67,7 +66,6 @@ export default function Created({ created, activeItem }) {
                         <Table unstackable>
                             <Table.Header>
                                 <Table.Row>
-                                    <Table.HeaderCell>Title</Table.HeaderCell>
                                     <Table.HeaderCell>Address</Table.HeaderCell>
                                     <Table.HeaderCell>End Date</Table.HeaderCell>
                                     <Table.HeaderCell>Prize (USD)</Table.HeaderCell>

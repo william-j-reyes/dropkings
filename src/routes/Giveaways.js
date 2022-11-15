@@ -95,12 +95,12 @@ export default function Giveaways() {
         return(
             <Table.Row>
                 <Table.Cell>
-                    <Link to={`/Giveaways/id=${item._contract}`}>
-                        {item._title}
-                    </Link>
+                    <h1 style={{color:'green'}}>${cleanFloat(prize * rate, 2)}</h1>
                 </Table.Cell>
                 <Table.Cell>
-                    <h1 style={{color:'green'}}>${cleanFloat(prize * rate, 2)}</h1>
+                    <Link to={`/Giveaways/id=${item._contract}`}>
+                        {item._contract}
+                    </Link>
                 </Table.Cell>
                 <Table.Cell positive={positive} negative={negative}>{status}</Table.Cell>
                 <Table.Cell positive={positive}>
@@ -119,8 +119,8 @@ export default function Giveaways() {
                 <Table unstackable>
                     <Table.Header>
                         <Table.Row>
-                        <Table.HeaderCell>Title</Table.HeaderCell>
                         <Table.HeaderCell>Prize</Table.HeaderCell>
+                        <Table.HeaderCell>Adress</Table.HeaderCell>
                         <Table.HeaderCell>Status</Table.HeaderCell>
                         <Table.HeaderCell>Time Left</Table.HeaderCell>
                         </Table.Row>
