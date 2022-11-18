@@ -2,13 +2,13 @@ import React, {useEffect, useState} from 'react';
 import { Table, Icon } from 'semantic-ui-react'
 import { ethers } from 'ethers';
 import '../css/Participants.css'
-import GiveawayFactory_ABI from "../ABI/GiveawayFactory_ABI";
+import CryptoDropFactory_ABI from "../ABI/CryptoDropFactory_ABI";
 import { useContract } from '..//hooks/useContract';
 import { useSelector } from 'react-redux';
 
 export default function Participants({contractAddress}) {
     const factoryAddress = useSelector((state) => state.wallet.network.factoryAddress);
-    const contractWS = useContract(factoryAddress, GiveawayFactory_ABI, true)
+    const contractWS = useContract(factoryAddress, CryptoDropFactory_ABI, true)
     const [participants, setParticipants] = useState([])
     
     // New Participants

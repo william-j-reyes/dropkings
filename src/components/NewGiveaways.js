@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Container, Table, Segment } from 'semantic-ui-react'
-import GiveawayFactory_ABI from "../ABI/GiveawayFactory_ABI";
-import Giveaway_ABI from "../ABI/Giveaway_ABI";
+import CryptoDropFactory_ABI from "../ABI/CryptoDropFactory_ABI";
+import CryptoDrop_ABI from "../ABI/CryptoDrop_ABI";
 import { Link } from "react-router-dom";
 import { ethers } from 'ethers';
 import { useSelector } from 'react-redux';
@@ -21,21 +21,21 @@ export default function NewGiveaways() {
 
     const rate = useExchangeRate(currency, 'USD');
     const factoryAddress = useSelector((state) => state.wallet.network.factoryAddress);
-    const factory = useContract(factoryAddress, GiveawayFactory_ABI, true);
+    const factory = useContract(factoryAddress, CryptoDropFactory_ABI, true);
 
     // Get All Participants
     useEffect( () => {
         const getLastGiveaways = async () => {
             const provider =  new ethers.providers.getDefaultProvider(network);
             try{
-                const total = await factory.totalGiveaways();
+                const total = await factory.totalDrops();
                 let upperbound = 4;
                 if(total < upperbound)
                     upperbound = total;
                 let i = 1;
                 while(i <= upperbound){
-                    const address = await factory.deployedGiveaways(total - i)
-                    const contract =  new ethers.Contract(address, Giveaway_ABI, provider)
+                    const address = await factory.deployedDrops(total - i)
+                    const contract =  new ethers.Contract(address, CryptoDrop_ABI, provider)
                     const [closingTime, prizePool, owner] = await Promise.all([
                         contract.closingTime(), contract.prizePool(), contract.owner()])
                     const tmp = {contractAddress: address, closingTime, 
@@ -53,8 +53,8 @@ export default function NewGiveaways() {
     }, [factory, network])
     
     useEffect(() => {
-        factory.on("NewGiveaway", (owner, contractAddress, title, closingTime, prizePool) => {
-            console.log("New Giveaway!!!")
+        factory.on("NewCryptoDrop", (owner, contractAddress, title, closingTime, prizePool) => {
+            console.log("New Drop!!!")
             const tmp = {
                 owner, 
                 contractAddress, 
@@ -69,7 +69,7 @@ export default function NewGiveaways() {
             setGiveAways( giveaways => [tmp, ...giveaways]);
         });
         return () =>{
-            factory.removeListener("NewGiveaway");
+            factory.removeListener("NewCryptoDrop");
         }
     }, [factory]);
         

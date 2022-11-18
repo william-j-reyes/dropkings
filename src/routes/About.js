@@ -39,9 +39,9 @@ export default function About() {
             <Container>
                 <Segment>
                     <p style={{fontSize:'200%'}}>Welcome to DropKings!</p> 
-                    <p>The only platform where anyone can create a Giveaway and anyone can enter for <b>FREE</b>.
-                        The best place for communities to giveback. You can support the site by leaving a <b>tip</b> when you create 
-                        a Giveaway.
+                    <p>The only platform where anyone can create a Drop to giveaway. Drop entry is absolutely <b>FREE</b>.
+                        The best place for communities to give back. You can support the site by leaving a <b>tip</b> when you create 
+                        a Drop.
                     </p>
                 <Segment>
                     <Header>Frequently Asked Questions</Header>

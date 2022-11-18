@@ -3,7 +3,7 @@ import Layout from '../components/Layout'
 import { Container, Form, Checkbox, Button, Message, Input, Segment, Popup } from 'semantic-ui-react'
 import { useSelector } from 'react-redux';
 import '../css/Create.css'; 
-import GiveawayFactory_ABI from "../ABI/GiveawayFactory_ABI";
+import CryptoDropFactory_ABI from "../ABI/CryptoDropFactory_ABI";
 import { ethers } from 'ethers';
 import { useContract } from '../hooks/useContract';
 import { cleanFloat } from '../helpers/cleanFloat';
@@ -19,7 +19,7 @@ export default function CreateCryptoDrop() {
     const address = useSelector((state) => state.wallet.address);
     const isConnected = useSelector((state) => state.wallet.isConnected);
     const factoryAddress = useSelector((state) => state.wallet.network.factoryAddress);
-    const factory = useContract(factoryAddress, GiveawayFactory_ABI, false, address);
+    const factory = useContract(factoryAddress, CryptoDropFactory_ABI, false, address);
 
     const minPrize = useTip(0);
     const defaultTip = useTip(0.2);
@@ -70,7 +70,7 @@ export default function CreateCryptoDrop() {
         return true
     }
 
-    const createGiveaway = async () => {
+    const createDrop = async () => {
         try{
             // Transaction Pending
             const date = new Date(endDate)
@@ -78,7 +78,7 @@ export default function CreateCryptoDrop() {
             const value = ethers.utils.parseUnits(total.toString(), "ether")
             const _ethTip = ethers.utils.parseUnits(tip.toString(), "ether")
             setTxMessage('Waiting on Transaction Success...')
-            const tx = await factory.createGiveaway(unixTimestamp, _ethTip, {value: value});
+            const tx = await factory.createDrop(unixTimestamp, _ethTip, {value: value});
             // Transaction complete
             if (tx){
                 console.log("Result:", tx)
@@ -101,7 +101,7 @@ export default function CreateCryptoDrop() {
         if (submissionPasses){
             // Create and Submit Transaction
             setTxPending(true)
-            createGiveaway();
+            createDrop();
         }else
             setShow(true);
     }

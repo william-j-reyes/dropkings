@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Container, Segment, Card } from 'semantic-ui-react'
-import GiveawayFactory_ABI from "../ABI/GiveawayFactory_ABI";
+import CryptoDropFactory_ABI from "../ABI/CryptoDropFactory_ABI";
 import { ethers } from 'ethers';
 import { useSelector } from 'react-redux';
 import '../css/Summary.css';
@@ -17,12 +17,12 @@ export default function Summary() {
     const decimal = useSelector((state) => state.wallet.network.decimal);
     const rate = useSelector((state) => state.wallet.toUSD);
     const factoryAddress = useSelector((state) => state.wallet.network.factoryAddress);
-    const factory = useContract(factoryAddress, GiveawayFactory_ABI, false);
+    const factory = useContract(factoryAddress, CryptoDropFactory_ABI, false);
     // Get All Participants
     useEffect( () => {
         const getData = async () => {
             try{
-                let res = await factory.totalGiveaways();
+                let res = await factory.totalDrops();
                 setTotalGiveaways(parseInt(ethers.utils.formatUnits(res, 0)));
                 res = await factory.totalPrize();
                 setTotalEth(parseFloat(ethers.utils.formatEther(res)));

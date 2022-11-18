@@ -2,11 +2,11 @@ import React, {useState, useEffect} from 'react';
 import Layout from '../components/Layout'
 import { Container, Pagination, Header, Table } from 'semantic-ui-react'
 import {Link} from "react-router-dom";
-import GiveawayFactory_ABI from "../ABI/GiveawayFactory_ABI";
+import CryptoDropFactory_ABI from "../ABI/CryptoDropFactory_ABI";
 import { ethers } from 'ethers';
 import { useSelector } from 'react-redux';
-import { useContract } from '..//hooks/useContract';
-import { useCountdown } from '..//hooks/useCountdown';
+import { useContract } from '../hooks/useContract';
+import { useCountdown } from '../hooks/useCountdown';
 import '../css/Giveaway.css';
 import { cleanFloat } from '../helpers/cleanFloat';
 
@@ -15,7 +15,7 @@ export default function Giveaways() {
     const [totalGiveAways, setTotalGiveaways] = useState(0);
 
     const factoryAddress = useSelector((state) => state.wallet.network.factoryAddress);
-    const factory = useContract(factoryAddress, GiveawayFactory_ABI, true)
+    const factory = useContract(factoryAddress, CryptoDropFactory_ABI, true)
     const rate = useSelector((state) => state.wallet.toUSD);
 
     const [_page, setPage] = useState(0);
@@ -24,7 +24,7 @@ export default function Giveaways() {
     
     useEffect(()=>{
         const getNumPages = async () => {
-            const total = await factory.totalGiveaways();
+            const total = await factory.totalDrops();
             setTotalGiveaways(parseInt(ethers.utils.formatUnits(total,0)))
             setNumPages(Math.ceil(total/giftsPerPage));
         }
@@ -48,7 +48,7 @@ export default function Giveaways() {
             if(start < 0)
                 start = 0;
             if(start !== end)
-                return await factory.getSlicedGifts(start, end);
+                return await factory.getSlicedDrops(start, end);
             else
                 return []
         }
@@ -58,7 +58,7 @@ export default function Giveaways() {
                 const addresses = await getPaginatedGifts(_page)
                 console.log(addresses)
                 if(addresses.length > 0){
-                    const eventFilter = factory.filters.NewGiveaway(null, addresses)
+                    const eventFilter = factory.filters.NewCryptoDrop(null, addresses)
                     const response = await factory.queryFilter(eventFilter)
                     const events = response.map( (item) =>{
                         return item.args})

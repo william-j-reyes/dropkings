@@ -48,7 +48,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "NewGiveaway",
+		"name": "NewCryptoDrop",
 		"type": "event"
 	},
 	{
@@ -114,6 +114,25 @@
 		"type": "event"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint64",
@@ -144,7 +163,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "createGiveaway",
+		"name": "createDrop",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
@@ -164,7 +183,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "deployedGiveaways",
+		"name": "deployedDrops",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -183,14 +202,14 @@
 				"type": "address"
 			}
 		],
-		"name": "enterFreeGiveaway",
+		"name": "enterDrop",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "getDeployedGiveaways",
+		"name": "getDeployedDrops",
 		"outputs": [
 			{
 				"internalType": "address[]",
@@ -214,7 +233,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "getSlicedGifts",
+		"name": "getSlicedDrops",
 		"outputs": [
 			{
 				"internalType": "address[]",
@@ -252,6 +271,13 @@
 			}
 		],
 		"name": "rawFulfillRandomWords",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -335,11 +361,11 @@
 	},
 	{
 		"inputs": [],
-		"name": "totalGiveaways",
+		"name": "totalDrops",
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "totalGiveAways_",
+				"name": "_totalDrops",
 				"type": "uint256"
 			}
 		],
@@ -370,6 +396,19 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

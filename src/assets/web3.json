@@ -49,8 +49,8 @@
       "currency":"MATIC",
       "https":"https://polygon-mumbai.g.alchemy.com/v2/da_m7-yiSdzZ5Q_YF-n57BNyqnNWegxA",
       "wss":"wss://polygon-mumbai.g.alchemy.com/v2/da_m7-yiSdzZ5Q_YF-n57BNyqnNWegxA",
-      "factoryAddress":"0x4Ad450A5ba7426deE224e251F52677E3cF4211A7",
-      "nftFactoryAddress":"0xf4967Fea60911D3D1B20ad36aBCa2a46666e4df1",
+      "factoryAddress":"0xbfBC839BE07c883E1fa30296Fab5f99Cd0A4377d",
+      "nftFactoryAddress":"0x67D16A649eAea7A53D5663623c42241808Db643a",
       "decimal":"3"
 
     },

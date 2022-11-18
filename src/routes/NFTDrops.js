@@ -23,7 +23,7 @@ export default function NFTDrops() {
     
     useEffect(()=>{
       const getNumPages = async () => {
-          const total = await factory.totalGiveaways();
+          const total = await factory.totalDrops();
           setTotalDrops(parseInt(ethers.utils.formatUnits(total,0)))
           setNumPages(Math.ceil(total/dropsPerPage));
         }
@@ -103,7 +103,7 @@ export default function NFTDrops() {
             </Table.Row>
         )
     }
-    const TableGiveaways = () =>{
+    const TableDrops = () =>{
         if (drops){
             const Items = drops.map( (item, key) =>{
                 return(<Cell item={item} key={key}/>)
@@ -145,7 +145,7 @@ export default function NFTDrops() {
                         onPageChange={pageHandler}/>
                 </div>
                 <div className='container__table'>
-                    <TableGiveaways/>
+                    <TableDrops/>
                 </div>
             </Container>
         </Layout>

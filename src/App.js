@@ -2,12 +2,12 @@ import React from 'react';
 import Create from "./routes/Create";
 import CreateCryptoDrop from "./routes/CreateCryptoDrop";
 import CreateNFTDrop from "./routes/CreateNFTDrop";
-import GiveAwayDetails from "./routes/GiveAwayDetails";
+import CryptoDropDetails from "./routes/CryptoDropDetails";
 import NFTDropDetails from "./routes/NFTDropDetails";
 import NFTDrops from "./routes/NFTDrops";
 import Home from './routes/Home';
 import About from "./routes/About";
-import Giveaways from "./routes/Giveaways";
+import CryptoDrops from "./routes/CryptoDrops";
 import Profile from "./routes/Profile";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
@@ -33,8 +33,8 @@ function App() {
           <Route path="/Crypto" element={<CreateCryptoDrop/>}/>
           <Route path="/Nft" element={<CreateNFTDrop/>} />
           <Route path="/About" element={<About/>} />
-          <Route path="/Giveaways" element={<Giveaways/>} />
-          <Route path="/Giveaways/id=:id" element={<GiveAwayDetails/>} />
+          <Route path="/Giveaways" element={<CryptoDrops/>} />
+          <Route path="/Giveaways/id=:id" element={<CryptoDropDetails/>} />
           <Route path="/NftDrops" element={<NFTDrops/>} />
           <Route path="/NftDrop/id=:id" element={<NFTDropDetails/>} />
           <Route path="/Profile" element={<Profile/>} />

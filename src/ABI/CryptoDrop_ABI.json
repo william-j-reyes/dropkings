@@ -8,17 +8,36 @@
 			},
 			{
 				"internalType": "address",
-				"name": "deployer",
+				"name": "_owner",
 				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "expiry",
+				"name": "_expiry",
 				"type": "uint256"
 			}
 		],
 		"stateMutability": "payable",
 		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
 	},
 	{
 		"inputs": [],
@@ -41,7 +60,7 @@
 				"type": "address"
 			}
 		],
-		"name": "enterFreeGiveaway",
+		"name": "enterDrop",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -96,7 +115,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "getGiveaway",
+		"name": "getCryptoDrop",
 		"outputs": [
 			{
 				"components": [
@@ -131,7 +150,7 @@
 						"type": "address"
 					}
 				],
-				"internalType": "struct Giveaway.Variables",
+				"internalType": "struct CryptoDrop.Variables",
 				"name": "variables_",
 				"type": "tuple"
 			}
@@ -161,7 +180,7 @@
 						"type": "uint256"
 					}
 				],
-				"internalType": "struct Giveaway.Participant[]",
+				"internalType": "struct CryptoDrop.Participant[]",
 				"name": "getParticipants_",
 				"type": "tuple[]"
 			}
@@ -258,6 +277,13 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -294,6 +320,19 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
 import { Container, Segment, Card, Menu, Icon } from 'semantic-ui-react';
 import { useContract } from '../hooks/useContract';
-import GiveawayFactory_ABI from "../ABI/GiveawayFactory_ABI";
+import CryptoDropFactory_ABI from "../ABI/CryptoDropFactory_ABI";
 import NFTDropFactory_ABI from "../ABI/NFTDropFactory_ABI";
 
 import { ethers } from 'ethers';
@@ -35,7 +35,7 @@ export default function Profile() {
     const rate = useSelector((state) => state.wallet.toUSD);
     const factoryAddress = useSelector((state) => state.wallet.network.factoryAddress);
     const nftFactoryAddress = useSelector((state) => state.wallet.network.nftFactoryAddress);
-    const factory = useContract(factoryAddress, GiveawayFactory_ABI, true);
+    const factory = useContract(factoryAddress, CryptoDropFactory_ABI, true);
     const nftFactory = useContract(nftFactoryAddress, NFTDropFactory_ABI, true);
 
     // Check if searching for a profile or own profile
@@ -94,7 +94,7 @@ export default function Profile() {
         const getCreatedGiveaways = async () =>{
             if(address){
                 try{
-                    const eventFilter = factory.filters.NewGiveaway(address)
+                    const eventFilter = factory.filters.NewCryptoDrop(address)
                     const response = await factory.queryFilter(eventFilter)
                     const events = response.map( (item) =>{return item.args})
                     setCreated(events.slice().reverse())
@@ -106,7 +106,7 @@ export default function Profile() {
         getCreatedGiveaways();
         return () =>{
             setCreated([]);
-            factory.removeListener('NewGiveaway');
+            factory.removeListener('NewCryptoDrop');
         }
     }, [address, factory])
 

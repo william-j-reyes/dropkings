@@ -7,8 +7,8 @@ import { useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import CountdownTimer from '../components/countdown/CountdownTimer';
 import { ethers } from 'ethers';
-import Giveaway_ABI from "../ABI/Giveaway_ABI";
-import GiveawayFactory_ABI from "../ABI/GiveawayFactory_ABI";
+import CryptoDrop_ABI from "../ABI/CryptoDrop_ABI";
+import CryptoDropFactory_ABI from "../ABI/CryptoDropFactory_ABI";
 import {useContract} from '../hooks/useContract';
 import { cleanFloat } from '../helpers/cleanFloat';
 import { useTheme } from '@mui/material/styles';
@@ -27,12 +27,12 @@ export default function GiveAwayDetails() {
   const [hideMsg, setHide] = useState(true);
   
   const contractAddress = params.id;
-  const contract = useContract(contractAddress, Giveaway_ABI, false, address);
-  const factory = useContract(factoryAddress, GiveawayFactory_ABI, false, address);
+  const contract = useContract(contractAddress, CryptoDrop_ABI, false, address);
+  const factory = useContract(factoryAddress, CryptoDropFactory_ABI, false, address);
 
   useEffect(() => {
     const getData = async ()=>{
-      let response = await contract.getGiveaway();
+      let response = await contract.getCryptoDrop();
       let tmp = {...response};
       tmp['prizePool'] = parseFloat(ethers.utils.formatUnits(tmp.prizePool, 18));
       tmp['closingTime'] = ethers.utils.formatUnits(tmp.closingTime, 0) * 1000;
@@ -102,7 +102,7 @@ export default function GiveAwayDetails() {
       const isEntered = await contract.entryStatus(address);
       if(!isEntered){
         try{
-          await factory.enterFreeGiveaway(contractAddress);
+          await factory.enterDrop(contractAddress);
           setHide(true);
           message['header'] = "You have entered the Giveaway!"
           message['message'] = "Sit tight and wait for the winner to be selected"
