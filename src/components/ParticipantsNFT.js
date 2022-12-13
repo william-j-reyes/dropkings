@@ -34,7 +34,6 @@ export default function ParticipantsNFT({contractAddress}) {
           const events = response.map( (item) =>{
             return {contractAddress: item.args.contractAddress, entryTime: item.args.entryTime, owner: item.args.owner}
           })
-          console.log(events)
           setParticipants(events.slice().reverse())
         }catch(e){
           console.log(e)

@@ -41,7 +41,6 @@ export default function NFTDropDetails() {
       let tmp = {...response};
       tmp['closingTime'] = ethers.utils.formatUnits(tmp.closingTime, 0) * 1000;
       tmp['closingDate'] = new Date(tmp.closingTime).toLocaleString();
-      console.log(tmp)
 
       setNft(tmp);
     }
@@ -157,6 +156,7 @@ export default function NFTDropDetails() {
     return(
       <div style={{margin:'auto', width:'50%', paddingTop:'5%'}}>
           <Image rounded src={cleanIPFS(image)} size='huge'/>
+          {approve}
       </div>
     )
   }

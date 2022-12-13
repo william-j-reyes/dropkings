@@ -11,6 +11,7 @@ export const walletSlice = createSlice({
     toCrypto: 0,
     networks: data,
     network: data['default'],
+
   },
   reducers: {
     setAddress: (state, action) => {

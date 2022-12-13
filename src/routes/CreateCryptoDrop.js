@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Layout from '../components/Layout'
-import { Container, Form, Checkbox, Button, Message, Input, Segment, Popup } from 'semantic-ui-react'
+import { Container, Form, Checkbox, Button, Message, Input, Segment, Popup, Step, Icon } from 'semantic-ui-react'
 import { useSelector } from 'react-redux';
 import '../css/Create.css'; 
 import CryptoDropFactory_ABI from "../ABI/CryptoDropFactory_ABI";
@@ -26,6 +26,8 @@ export default function CreateCryptoDrop() {
     const [tip, setTip] = useState(defaultTip);
     const [prize, setPrize] = useState(0);
     const [total, setTotal] = useState(0);
+    const [dropCreated, setDropCreated] = useState('active');
+    const [dropIcon, setDropIcon] = useState('box');
 
     const [endDate, setEndDate] = useState(null);
     const [txPending, setTxPending] = useState(false);
@@ -72,25 +74,32 @@ export default function CreateCryptoDrop() {
 
     const createDrop = async () => {
         try{
-            // Transaction Pending
+            const provider = factory.signer.provider
+
             const date = new Date(endDate)
             const unixTimestamp = Math.floor(date.getTime() / 1000);
             const value = ethers.utils.parseUnits(total.toString(), "ether")
             const _ethTip = ethers.utils.parseUnits(tip.toString(), "ether")
-            setTxMessage('Waiting on Transaction Success...')
-            const tx = await factory.createDrop(unixTimestamp, _ethTip, {value: value});
-            // Transaction complete
-            if (tx){
-                console.log("Result:", tx)
-                console.log("Transaction Completed!");
+            const createReceipt = await factory.createDrop(unixTimestamp, _ethTip, {value: value});
+            setTxMessage("Waiting For Transaction to Complete...")
+            const created = await provider.waitForTransaction(createReceipt.hash);
+
+            // Listen for CryptoDropCreation Event
+            const eventFilter = factory.filters.NewCryptoDrop(address);
+            const response = await factory.queryFilter(eventFilter);
+            const event = response.pop();
+            if (created.blockHash === event.blockHash){
+                setDropCreated('completed')
+                setDropIcon('circle notch')
+                setTxMessage("Transaction Complete! Drop Created...")
                 setTxPending(false)
                 setTxSuccess(true);
-                setTxMessage('Giveaway Created!')
             }
         }catch(err){
             console.log("ERROR:", err)
-            setTxMessage("Transaction Failed... Check if connected to Ethereum Network")
+            setTxMessage("Transaction Failed...")
             setShow(true)
+            setDropIcon('x red')
         }
  
     }
@@ -101,6 +110,7 @@ export default function CreateCryptoDrop() {
         if (submissionPasses){
             // Create and Submit Transaction
             setTxPending(true)
+            setDropIcon('circle notch loading')
             createDrop();
         }else
             setShow(true);
@@ -108,10 +118,6 @@ export default function CreateCryptoDrop() {
 
     const LoadingButton = () =>{
         if(!txSuccess)
-            return(<Button fluid positive type='submit' onClick={handleSubmit}>Create</Button>)
-        else if(txPending)
-            return(<Button fluid positive type='submit' loading>Create</Button>)
-        else
             return(<Button fluid positive type='submit' onClick={handleSubmit}>Create</Button>)
     }
 
@@ -139,6 +145,19 @@ export default function CreateCryptoDrop() {
         }
             return(<div></div>)
     }
+
+    const Steps = () =>{
+        return(
+        <Step.Group fluid>
+            <Step className={dropCreated}>
+            <Icon className={dropIcon} />
+            <Step.Content>
+                <Step.Title>Create</Step.Title>
+            </Step.Content>
+            </Step>
+        </Step.Group>
+    )
+    }
     return (
         <Layout>
             <Container className="Main_container">
@@ -146,6 +165,7 @@ export default function CreateCryptoDrop() {
                 
                 <Segment className="Main_content" style={{margin:'auto', width:'50%'}}>
                     <h1 style={{color: theme.palette.primary.main}}>Crypto Drop</h1>
+                    <Steps/>
                     <Form>
                         
                         <Form.Field>

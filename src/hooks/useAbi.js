@@ -16,7 +16,6 @@ const useAbi = (address, chain) => {
 
       const getAbi = async () => {
         if(api && address){
-          console.log(api)
           var requestOptions = {
             method: 'GET',
             redirect: 'follow'
