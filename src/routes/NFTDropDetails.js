@@ -1,6 +1,6 @@
 import '../css/GiveAwayDetails.css'
 import React, {useState, useEffect} from 'react';
-import { Container, Button, Segment, Icon, Message, Menu, Image } from 'semantic-ui-react'
+import { Container, Button, Segment, Message, Menu, Image } from 'semantic-ui-react'
 import Layout from '../components/Layout';
 import NotFound from '../components/NotFound';
 import ParticipantsNFT from '../components/ParticipantsNFT';
@@ -56,7 +56,7 @@ export default function NFTDropDetails() {
     const getApproval = async () =>{
       const approved = await ERC721.getApproved(nft.tokenId)
       if (approved === contractAddress)
-        setApprove("APPROVED")
+        setApprove(true)
     }
     if (nft.tokenId && ERC721){
       try{
@@ -85,15 +85,45 @@ export default function NFTDropDetails() {
     }
   }
 
+  const _approve = async () =>{
+    const provider = factory.signer.provider
+    const approveReceipt = await ERC721.approve(contractAddress, nft.tokenId);
+    const approved = await provider.waitForTransaction(approveReceipt.hash);
+    if (approved)
+      setApprove(true)
+  }
+  const _cancelDrop = async () =>{
+    try{
+      const result = await contract.cancelDrop();
+      console.log(result)
+    }catch(e){
+      console.log(e)
+    }
+  }
+
   const OwnerControls = () => {
     if(isConnected && address === nft.owner && nft.winner === ethers.constants.AddressZero){
-      return(
-        <Menu widths={3}>
-          <Menu.Item onClick={_selectWinner}><p className='select-winner'>Select Winner</p></Menu.Item>
-          <Menu.Item icon={<Icon name="plus"/>}/>
-          <Menu.Item ><p className='refund'>Cancel</p></Menu.Item>
-        </Menu>
-      )
+      if (approve)
+        return(
+          <Menu widths={2}>
+            <Menu.Item onClick={_selectWinner}><p className='select-winner'>Select Winner</p></Menu.Item>
+            <Menu.Item onClick={_cancelDrop}><p className='refund'>Cancel</p></Menu.Item>
+          </Menu>
+        )
+      else
+        return(
+          <Menu widths={2}>
+            <Menu.Item onClick={_approve}><p className='select-winner'>Approve</p></Menu.Item>
+            <Menu.Item onClick={_cancelDrop}><p className='refund'>Cancel</p></Menu.Item>
+          </Menu>
+        )
+    }
+    else{
+      if (!approve)
+        return(<Message warning>
+          <Message.Header>Owner Hasn't Approved NFT for Drop</Message.Header>
+          <p>Drop does not have permissions to giveaway NFT yet. Waiting for owners' approval.</p>
+        </Message>)
     }
   }
 
@@ -150,7 +180,7 @@ export default function NFTDropDetails() {
       message['color'] = 'red'
       setMsg(message)
     }
-}
+  }
 
   const ShowDetails = () =>{
     return(

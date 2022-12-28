@@ -57,12 +57,15 @@ export default function GiveAwayDetails() {
 
   const _refund = async () =>{
     try{
-      await contract.refund()
-      setGiveaway(...giveaway, {prizePool:0})
-
-    }catch(e){
-      console.log(e)
-    }
+      const provider = contract.signer.provider
+      const refundReceipt = await contract.refund();
+      console.log('Cancelling Drop');
+      const refunded = await provider.waitForTransaction(refundReceipt.hash);
+      if (refunded){
+        console.log('Drop Cancelled');
+        setGiveaway(...giveaway, {prizePool:0})
+      }
+    }catch{}
   }
 
   const OwnerControls = () => {
@@ -71,7 +74,7 @@ export default function GiveAwayDetails() {
         <Menu widths={3}>
           <Menu.Item onClick={_selectWinner}><p className='select-winner'>Select Winner</p></Menu.Item>
           <Menu.Item icon={<Icon name="plus"/>}/>
-          <Menu.Item onClick={_refund}><p className='refund'>Refund</p></Menu.Item>
+          <Menu.Item onClick={_refund}><p className='refund'>Cancel</p></Menu.Item>
         </Menu>
       )
     }

@@ -69,15 +69,22 @@ export default function CreateNFTDrop() {
                 setDropIcon('circle notch')
                 setTransferIcon('circle notch loading')
             // 2) Send nft to the deployed Drop
-                const approveReceipt = await ERC721.approve(event.args.contractAddress, nft.tokenId);
-                const approved = await provider.waitForTransaction(approveReceipt.hash);
-                if (approved){
-                    setTransfer('completed');
-                    setTransferIcon('circle notch')
-                    setTxPending(false);
-                    setTxMessage("NFT Drop Successfully Created");
-                    setTxSuccess(true);
+                try{
+                    const approveReceipt = await ERC721.approve(event.args.contractAddress, nft.tokenId);
+                    const approved = await provider.waitForTransaction(approveReceipt.hash);
+                    if (approved){
+                        setTransfer('completed');
+                        setTransferIcon('circle notch');
+                        setTxPending(false);
+                        setTxMessage("NFT Drop Successfully Created");
+                        setTxSuccess(true);
+                    }
+                }catch{
+                    setTxMessage("NFT Not Approved For Transfer");
+                    setTransferIcon('cancel red');
+                    setTxSuccess(false);
                 }
+
             }
         }else
             setShow(true);
@@ -177,7 +184,7 @@ export default function CreateNFTDrop() {
             </Step>
         
             <Step className={transfer}>
-            <Icon className={transferIcon} color='black'/>
+            <Icon className={transferIcon}/>
             <Step.Content>
                 <Step.Title>Approve Drop Transfer</Step.Title>
             </Step.Content>
