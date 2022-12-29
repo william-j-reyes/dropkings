@@ -56,12 +56,14 @@ export default function NFTDropDetails() {
     const getApproval = async () =>{
       const approved = await ERC721.getApproved(nft.tokenId)
       if (approved === contractAddress)
-        setApprove(true)
+        setApprove(true);
     }
     if (nft.tokenId && ERC721){
       try{
-        getApproval()
-      }catch{}
+        getApproval();
+      }catch(e){
+        console.log(e.message);
+      }
     }
   }, [nft, contractAddress, ERC721])
 
@@ -81,7 +83,13 @@ export default function NFTDropDetails() {
         setHide(false)
       }
     }catch(e){
-      console.log(e)
+      const msg = e.message;
+      const reverted = 'execution reverted:';
+      const start = msg.indexOf(reverted)
+      const end = msg.indexOf('method=')
+
+      const err = msg.substring(start, end - 3)
+      console.log(err)
     }
   }
 
@@ -92,6 +100,7 @@ export default function NFTDropDetails() {
     if (approved)
       setApprove(true)
   }
+
   const _cancelDrop = async () =>{
     try{
       const result = await contract.cancelDrop();
@@ -183,6 +192,13 @@ export default function NFTDropDetails() {
   }
 
   const ShowDetails = () =>{
+    const blank = require("../assets/white-image.png")
+    if (image === '')
+      return(
+        <div style={{margin:'auto', width:'50%', paddingTop:'5%'}}>
+          <Image rounded bordered src={blank} size='huge'/>
+        </div>
+      )
     return(
       <div style={{margin:'auto', width:'50%', paddingTop:'5%'}}>
           <Image rounded src={cleanIPFS(image)} size='huge'/>

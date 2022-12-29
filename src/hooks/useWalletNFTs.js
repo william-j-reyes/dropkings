@@ -20,7 +20,9 @@ const useWalletNFTs = () => {
               const url = `${baseurl}/moralis/WalletNFTs/${chainId}/${address}`
               const response = await fetch(url, requestOptions);
               const json = await response.json();
-              setNfts(json)
+              const result = json['nfts'].filter(nft => nft.contractType === "ERC721");
+ 
+              setNfts({'nfts': result})
             }catch(e){ console.log(e) }
           }
         }

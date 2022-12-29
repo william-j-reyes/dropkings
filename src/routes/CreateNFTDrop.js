@@ -13,7 +13,6 @@ import { useWalletNFTs } from '../hooks/useWalletNFTs';
 import NFTDropFactory_ABI from "../ABI/NFTDropFactory_ABI";
 import { ethers } from 'ethers';
 
-
 export default function CreateNFTDrop() {
     const theme = useTheme();
     const isConnected = useSelector((state) => state.wallet.isConnected);
@@ -153,7 +152,7 @@ export default function CreateNFTDrop() {
     }
 
     const SelectedNFT = () =>{
-        const daniel = require("../assets/white-image.png")
+        const blank = require("../assets/white-image.png")
         if(nft.metadata){
             const image = cleanIPFS(nft.metadata.image);
             return(
@@ -167,7 +166,7 @@ export default function CreateNFTDrop() {
             return(
             <div style={{margin:"auto", width:"50%"}}>
                 <Card
-                    image={daniel}
+                    image={blank}
                 />
             </div>)
         }
@@ -184,7 +183,7 @@ export default function CreateNFTDrop() {
             </Step>
         
             <Step className={transfer}>
-            <Icon className={transferIcon}/>
+            <Icon className={transferIcon} color='black'/>
             <Step.Content>
                 <Step.Title>Approve Drop Transfer</Step.Title>
             </Step.Content>
